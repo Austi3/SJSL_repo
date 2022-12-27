@@ -3,14 +3,16 @@
 TODO!!! rename a lot of these to make more sense
 """
 class Tourney:
-    def __init__(self, linkName, startgglink, officialName, tseries, color, totalEntrants, resultsDFrame):
+    def __init__(self, linkName, startgglink, TName, tseries, color, totalEntrants, resultsString):
       self.fullLink = linkName
       self.smashGGlink = startgglink
-      self.officialName = officialName
+      self.TName = TName
+      if "Battle Over The Bridge" in TName:
+        self.TName = TName.replace("Battle Over The Bridge", "BOTB")
       self.tseries = tseries
       self.color = color
       self.totalEntrants = totalEntrants
-      self.resultsDFrame = resultsDFrame
+      self.resultsString = resultsString
 
       """
       values to be calculated later
@@ -27,13 +29,14 @@ class Tourney:
 
     def to_dict(self):
         return {
-            'fullLink': self.fullLink,
-            'smashGGlink': self.smashGGlink,
-            'Tournament Name' : self.officialName,
-            'tseries': self.tseries,
+            'Hyperlink': self.fullLink,
+            'SGGName': self.smashGGlink,
+            'TName' : self.TName,
+            'TSeries': self.tseries,
             'Color': self.color,
             'Total Entrants': self.totalEntrants,
-            'resultsDFrame' : self.resultsDFrame,
+
+            'resultsString' : self.resultsString,
             'notable entrants': self.notableEntrants,
             'otherEntrants': self.otherEntrants,
             'placementDict':self.placementDict,

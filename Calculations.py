@@ -1,4 +1,6 @@
 
+from playerClass import *
+
 def handleSpecialPlayers(tag):
   """
   TODO i might want a way to make this more robust or avoid this, but itll work for now
@@ -45,7 +47,6 @@ def getTourneyScores(tourneyObj, playerLvlsObj):
   for playerTag in tourneyObj.placementDict:
     lowerName = playerTag.lower()
     
-
     if lowerName in playerLvlsObj.lvl5s:
       tourneyObj.stackedScore += 5
       tourneyObj.notableEntrants.append(lowerName)
@@ -67,7 +68,7 @@ def makeTourneyPlacementDict(tourneyObj):
   # first build dictionary of all players by parsing the results string I jankily made
   # the dictionary has the key as the player's name and the value as the place they got at 
   # the particular tourney
-  uglyPlayerString = tourneyObj.resultsDFrame.split("$$")
+  uglyPlayerString = tourneyObj.resultsString.split("$$")
   for playerStr in uglyPlayerString:
     if playerStr:
       try:
@@ -78,3 +79,23 @@ def makeTourneyPlacementDict(tourneyObj):
         print("UH OH something went wrong getting player's name for ", tourneyObj.officialName)
         break
       tourneyObj.placementDict[tag] = place 
+
+
+def updateAllPlayerScores(tourneyObj, playerObjDict):
+
+    for playerTag in tourneyObj.placementDict:
+
+      placement = tourneyObj.placementDict[playerTag]
+      playerPts = calculatePlayerTourneyPts(placement, tourneyObj)
+
+      if playerTag not in playerObjDict:
+        playerObjDict[playerTag] = Player(playerTag)
+      
+      # TODO this is new test it
+      playerObjDict[playerTag].tourneysEntered.append(tourneyObj.TName)
+      playerObjDict[playerTag].numTourneysEntered += 1
+      playerObjDict[playerTag].earnedTourneyPts += playerPts
+      playerObjDict[playerTag].totalPossibleTourneyPts += tourneyObj.totalScore
+      playerObjDict[playerTag].tourneyPtRatio = playerObjDict[playerTag].earnedTourneyPts/playerObjDict[playerTag].totalPossibleTourneyPts
+
+ 
