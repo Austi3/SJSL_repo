@@ -6,11 +6,15 @@ def handleSpecialPlayers(tag):
   TODO i might want a way to make this more robust or avoid this, but itll work for now
   """
   if tag.lower() in ['snogi', 'critz but retired', '<3 brisket']:
-    tag = 'snogi'
-  elif tag.lower in ['chanman', 'chan', 'poop87']:
-    tag = 'chanman'
+    tag = 'Snogi'
+  elif tag.lower() in ['chanman', 'chan', 'poop87']:
+    tag = 'Chanman'
+  elif 'Poop' in tag:
+    print("my name is", tag.lower())
   elif tag.lower() in ['sauce', 'hotsaucefuego','obmcbob']:
-    tag = 'sauce'
+    tag = 'Sauce'
+  elif tag in ['xavier', 'Xavier']:
+    tag = 'Xavier'
   return tag
 
 def calculatePlayerTourneyPts(placement, tourneyObj):
@@ -21,13 +25,44 @@ def calculatePlayerTourneyPts(placement, tourneyObj):
   for top 8??? 
   maybe thresholds are in order like 1st gets 100%. 2nd gets 95%. 3rd gets 90 etc. defined up to 33rd
   """
-
+  
   if not placement:
     print("error: NO PLACEMENT FOUND for a player",tourneyObj.officialName, tourneyObj.placementDict)
     playerPts = 0
   else:
-    percentage = ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants)
-    playerPts = ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants) * tourneyObj.totalScore
+    """
+    # NOTE this was my original percentage calculation- based off of total entrants and placement
+    # perc = ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants)
+    """
+    placement = int(placement)
+    # NOTE this is my fixed percentage model- may want to adjust
+    perc = 0
+    if placement == 1:
+      perc = 1
+    elif placement == 2:
+      perc = .90
+    elif placement == 3:
+      perc = .80
+    elif placement == 4:
+      perc = .70
+    
+    # award pts to top 6 if more than 12 entrants
+    if tourneyObj.totalEntrants > 12:
+      if placement == 5:
+        perc = .60
+    
+    # award pts to top 8 if more than 16 entrants
+    if tourneyObj.totalEntrants > 16:
+      if placement == 7:
+        perc = .50
+
+    # award pts to top 12 if more than 24 entrants
+    if tourneyObj.totalEntrants > 24:
+      if placement == 9:
+        perc = .40
+
+    
+    playerPts = perc * tourneyObj.totalScore
   
   return playerPts
 
@@ -47,14 +82,20 @@ def getTourneyScores(tourneyObj, playerLvlsObj):
   for playerTag in tourneyObj.placementDict:
     lowerName = playerTag.lower()
     
+    """
+    TODO do i like 1.5 increments better??? 
+    """
     if lowerName in playerLvlsObj.lvl5s:
-      tourneyObj.stackedScore += 5
+      tourneyObj.stackedScore += 6
       tourneyObj.notableEntrants.append(lowerName)
     elif lowerName in playerLvlsObj.lvl4s:
-      tourneyObj.stackedScore += 4
+      tourneyObj.stackedScore += 4.5
       tourneyObj.notableEntrants.append(lowerName)
     elif lowerName in playerLvlsObj.lvl3s:
       tourneyObj.stackedScore += 3
+      tourneyObj.notableEntrants.append(lowerName)
+    elif lowerName in playerLvlsObj.lvl2s:
+      tourneyObj.stackedScore += 1.5
       tourneyObj.notableEntrants.append(lowerName)
     else:
       tourneyObj.otherEntrants.append(lowerName)
@@ -92,7 +133,7 @@ def updateAllPlayerScores(tourneyObj, playerObjDict):
         playerObjDict[playerTag] = Player(playerTag)
       
       # TODO this is new test it
-      playerObjDict[playerTag].tourneysEntered.append(tourneyObj.TName)
+      playerObjDict[playerTag].tourneysEntered.append(tourneyObj.smashGGlink)
       playerObjDict[playerTag].numTourneysEntered += 1
       playerObjDict[playerTag].earnedTourneyPts += playerPts
       playerObjDict[playerTag].totalPossibleTourneyPts += tourneyObj.totalScore

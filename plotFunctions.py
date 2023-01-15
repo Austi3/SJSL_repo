@@ -19,12 +19,12 @@ def plotPlayerDataFrame(playerDataFrame,  playerObjDict, plotItem, plotName):
     playerDataFrame = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
 
 
-    playerDataFrame = playerDataFrame.sort_values(by=[plotItem], ascending=False)[0:30] # plot top 50
+    playerDataFrame = playerDataFrame.sort_values(by=[plotItem], ascending=False)[0:30] # plot top 30
   
     plt.figure(figsize=(10, 7))
 
     plt.bar(playerDataFrame['tag'], playerDataFrame[plotItem])
-    plt.xticks(rotation=70)
+    plt.xticks(rotation=75)
 
 
     plt.ylabel(plotItem)
@@ -33,6 +33,21 @@ def plotPlayerDataFrame(playerDataFrame,  playerObjDict, plotItem, plotName):
     plt.show()
 
 
+def plotPlayerPerformance(playerTag, playerObjDict, tourneyObjDict):
+    player = playerObjDict[playerTag]
+
+    placements = []
+    tnames = []
+    for tourney in player.tourneysEntered:
+        placement = tourneyObjDict[tourney].placementDict[playerTag]
+        tname =  tourneyObjDict[tourney].TName
+        placements.append(placement)
+        tnames.append(tname)
+    
+    plt.plot(tnames, placements)
+    plt.show()
+
+        
 
 def plotDataFrame(tourneyDF, plotItem, plotName):
 
