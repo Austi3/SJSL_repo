@@ -1,10 +1,11 @@
 """
 plot functions
 """
-
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import scipy.stats as stats
 
 def plotPlayerDataFrame(playerDataFrame,  playerObjDict, plotItem, plotName):
 
@@ -18,18 +19,37 @@ def plotPlayerDataFrame(playerDataFrame,  playerObjDict, plotItem, plotName):
 
     playerDataFrame = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
 
+    """
+    TODO plot normal distribution
+    df_mean = np.mean(playerDataFrame[plotItem])
+    df_std = np.std(playerDataFrame[plotItem])
+    
+    # Calculating probability density function (PDF)
+    pdf = stats.norm.pdf(playerDataFrame[plotItem].sort_values(), df_mean, df_std)
+   
+
+    plt.bar(playerDataFrame[plotItem].sort_values(), pdf)[0:30]
+    plt.show()
+     """
 
     playerDataFrame = playerDataFrame.sort_values(by=[plotItem], ascending=False)[0:30] # plot top 30
-  
-    plt.figure(figsize=(10, 7))
+    playerDataFrame = playerDataFrame.round(2)
 
-    plt.bar(playerDataFrame['tag'], playerDataFrame[plotItem])
+    # fig, ax = plt.figure(figsize=(10, 7))
+
+    # plt.bar(playerDataFrame['tag'], playerDataFrame[plotItem])
+
+    ax = playerDataFrame.plot.bar('tag',plotItem, figsize=(15, 7))
+    for container in ax.containers:
+        ax.bar_label(container)
+
     plt.xticks(rotation=75)
-
-
     plt.ylabel(plotItem)
     plt.title(plotName)
     plt.tight_layout()
+
+    plt.savefig('./plotsOutput/' +plotName.strip() + ".png" )
+
     plt.show()
 
 
@@ -75,5 +95,6 @@ def plotDataFrame(tourneyDF, plotItem, plotName):
   plt.grid( axis ='y')
   plt.tight_layout()
 
+  plt.savefig('./plotsOutput/' +plotItem + ".png" )
 
   plt.show()

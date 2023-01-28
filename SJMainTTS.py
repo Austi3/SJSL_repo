@@ -39,23 +39,23 @@ def Main():
         #tourney            Hyperlink              SGGName              TName,           TSeries,           Color,          TotalEntrants,          ResultsString)
         tourneyObj = Tourney(data['Hyperlink'],    data['SGGName'],     data['TName'],   data['TSeries'],   data['Color'],  data['Total Entrants'],  data['ResultsString'])
         name = str(data['SGGName'])  
-        tourneyObjDict[name] = tourneyObj
+        if "hyperspace" not in name:
+            tourneyObjDict[name] = tourneyObj
 
     for tourney in tourneyObjDict:
         makeTourneyPlacementDict(tourneyObjDict[tourney])
         getTourneyScores(tourneyObjDict[tourney], playerLvlsObj)
-
     
         updateAllPlayerScores(tourneyObjDict[tourney], playerObjDict)        
     
     # covert the dict of tourneys into a dataframe for plotting
     tourneyDF = pd.DataFrame.from_records([tourneyObjDict[tournName].to_dict() for tournName in tourneyObjDict])
 
-    # Plotting Tourney Info
-    plotDataFrame(tourneyDF, 'stackedScore', 'SJ Tourneys by Stacked Score')
-    plotDataFrame(tourneyDF, 'Total Entrants', 'SJ Tourney Attendance')
-    plotDataFrame(tourneyDF, 'totalScore', 'SJ Tourneys by Total Score')
-    plotDataFrame(tourneyDF, 'stackedRatio', 'SJ Tourneys by Stacked Player Ratio')
+    # # Plotting Tourney Info
+    # plotDataFrame(tourneyDF, 'stackedScore', 'SJ Tourneys by Stacked Score')
+    # plotDataFrame(tourneyDF, 'Total Entrants', 'SJ Tourney Attendance')
+    # plotDataFrame(tourneyDF, 'totalScore', 'SJ Tourneys by Total Score')
+    # plotDataFrame(tourneyDF, 'stackedRatio', 'SJ Tourneys by Stacked Player Ratio')
 
     """
     TODO  i want to have an option to plot each individual's placement at a tourney and their pt ratio gathered from that
@@ -67,12 +67,18 @@ def Main():
     """
     playerDF = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
 
+    # getPlayerTopResults(playerObjDict)
 
-    plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', 'Players Ranked by Pt Ratio (Earned/Max)')
-    plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Earned Tourney Pts of Each Player')
-    plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Max Possible Pts for Each Player')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'weightedPercentileAvg', 'Players Ranked by Weighted Percentile Ratio')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'avgPercentile', 'Players Ranked by Average Placement Percentile')
 
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Earned Tourney Pts of Each Player')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Max Possible Pts for Each Player')
 
+    plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', ' Tourney Pt Ratio (Temp Best Alg)')
+
+    return tourneyDF, playerDF
+    
 
 
 """

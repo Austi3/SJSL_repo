@@ -2,6 +2,9 @@
 """
 TODO!!! rename a lot of these to make more sense
 """
+from enum import Enum
+import regex as re
+
 class Tourney:
     def __init__(self, linkName, startgglink, TName, tseries, color, totalEntrants, resultsString):
       self.fullLink = linkName
@@ -45,3 +48,4 @@ class Tourney:
             'totalScore': self.totalScore,
             'stackedRatio': self.stackedRatio
         }
+
