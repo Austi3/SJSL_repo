@@ -16,6 +16,10 @@ def handleSpecialPlayers(tag):
     tag = 'Sauce'
   elif tag in ['xavier', 'Xavier']:
     tag = 'Xavier'
+  elif tag.lower() in ["vince", "sapphire"]:
+    tag == "Vince"
+  elif tag.lower() in ["pee83", "treestain"]:
+    tag = "Treestain"
   return tag
 
 def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
@@ -26,8 +30,6 @@ def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
   for top 8??? 
   maybe thresholds are in order like 1st gets 100%. 2nd gets 95%. 3rd gets 90 etc. defined up to 33rd
   """
-  if playerTag == "A9":
-    print()
   
   if not placement:
     print("error: NO PLACEMENT FOUND for a player",tourneyObj.officialName, tourneyObj.placementDict)
@@ -180,27 +182,28 @@ def updateAllPlayerScores(tourneyObj, playerObjDict):
 
       percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
 
-
       #THIS NEXT PART IS WRONG AND OUTDATED!!! ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants) 
-
       """
       todo todo TODO TODO
       NEED TO DOUBLE CHECK THIS???
       """
+
+
+      #WHY DID I MAKE THIS CONFUSING AND THE SAME NAME??? IS IT RIGHT????
       placementPercentilePts = percentile 
 
       weightedPercentilePts = (percentile/100) * tourneyObj.totalScore
       # TODO TESTING !!!!! recompute avg each time
 
       playerObjDict[playerTag].weightedPercentilePts += weightedPercentilePts
-      playerObjDict[playerTag].weightedPercentileAvg = playerObjDict[playerTag].weightedPercentilePts /playerObjDict[playerTag].totalPossibleTourneyPts
+      playerObjDict[playerTag].weightedPercentileAvg = (playerObjDict[playerTag].weightedPercentilePts /playerObjDict[playerTag].totalPossibleTourneyPts) * 100
 
 
       playerObjDict[playerTag].percentilePts += placementPercentilePts
       playerObjDict[playerTag].avgPercentile = (playerObjDict[playerTag].percentilePts) / (playerObjDict[playerTag].numTourneysEntered)
       
 
-      playerObjDict[playerTag].tourneyResultsDict[tourneyObj.TName] = PlayerTourneyResults(tourneyObj, placement, playerPts, placementPercentilePts)
+      playerObjDict[playerTag].tourneyResultsDict[tourneyObj.TName] = PlayerTourneyResults(tourneyObj, placement, playerPts, placementPercentilePts, weightedPercentilePts)
 
  
 def getPlayerTopResults(playerObjDict):

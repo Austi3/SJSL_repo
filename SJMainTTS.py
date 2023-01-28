@@ -75,9 +75,9 @@ def Main():
     # plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Earned Tourney Pts of Each Player')
     # plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Max Possible Pts for Each Player')
 
-    plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', ' Tourney Pt Ratio (Temp Best Alg)')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', ' Tourney Pt Ratio (Temp Best Alg)')
 
-    return tourneyDF, playerDF
+    return tourneyObjDict, playerObjDict
     
 
 

@@ -17,6 +17,7 @@ def plotPlayerDataFrame(playerDataFrame,  playerObjDict, plotItem, plotName):
 
     playerObjDict = tempDict 
 
+    #i redo the player dataframe here to filter by people with >= 5 tourneys. 
     playerDataFrame = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
 
     """
