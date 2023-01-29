@@ -16,6 +16,9 @@ def Main():
     rankedLvlPlayersDF = pd.read_excel(masterExcelFile, sheet_name = 2)
 
     lvl2s = rankedLvlPlayersDF['LEVEL2'].str.lower().dropna().to_list()
+    # lvl2s = []
+    # """TODO im testing this"""
+
     lvl3s = rankedLvlPlayersDF['LEVEL3'].str.lower().dropna().to_list()
     lvl4s = rankedLvlPlayersDF['LEVEL4'].str.lower().dropna().to_list()
     lvl5s = rankedLvlPlayersDF['LEVEL5'].str.lower().dropna().to_list()
@@ -52,10 +55,10 @@ def Main():
     tourneyDF = pd.DataFrame.from_records([tourneyObjDict[tournName].to_dict() for tournName in tourneyObjDict])
 
     # # Plotting Tourney Info
-    # plotDataFrame(tourneyDF, 'stackedScore', 'SJ Tourneys by Stacked Score')
-    # plotDataFrame(tourneyDF, 'Total Entrants', 'SJ Tourney Attendance')
-    # plotDataFrame(tourneyDF, 'totalScore', 'SJ Tourneys by Total Score')
-    # plotDataFrame(tourneyDF, 'stackedRatio', 'SJ Tourneys by Stacked Player Ratio')
+    plotDataFrame(tourneyDF, 'stackedScore', 'SJ Tourneys by Stacked Score')
+    plotDataFrame(tourneyDF, 'Total Entrants', 'SJ Tourney Attendance')
+    plotDataFrame(tourneyDF, 'totalScore', 'SJ Tourneys by Total Score')
+    plotDataFrame(tourneyDF, 'stackedRatio', 'SJ Tourneys by Stacked Player Ratio')
 
     """
     TODO  i want to have an option to plot each individual's placement at a tourney and their pt ratio gathered from that
@@ -69,21 +72,21 @@ def Main():
 
     # getPlayerTopResults(playerObjDict)
 
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'weightedPercentileAvg', 'Players Ranked by Weighted Percentile Ratio')
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'avgPercentile', 'Players Ranked by Average Placement Percentile')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'weightedPercentileAvg', 'Weighted Avg Percentile (%)', 'Top 30 Weighted Percentile Average Scores')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'avgPercentile', "Avg Percentile (%)", 'Top 30 Average Placement Percentiles')
 
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Earned Tourney Pts of Each Player')
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Max Possible Pts for Each Player')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Points Earned', 'Earned Tourney Pts of Top 30 Players (7% Incr)', False, 1)
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Points Possible', 'Max Possible Point Score', False)
 
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', ' Tourney Pt Ratio (Temp Best Alg)')
+    # plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', 'Point Ratio (Pts Earned/ Max Pts Possible %)', 'Top 30 Tourney Point Ratios (7% Incr)')
 
     return tourneyObjDict, playerObjDict
     
 
-
+Main()
 """
 TODO i want a look up and print function that searches for a player or tournament and outputs the info i want i need to be able to search
 this database of mine
 """
 
-Main()
+# Main()

@@ -1,7 +1,7 @@
 import numpy as np
 
 class Player:
-  def __init__(self, tag):
+  def __init__(self, tag, color):
     self.tag = tag
     self.tourneysEntered = []
     self.tourneyResultsDict = {} 
@@ -14,6 +14,7 @@ class Player:
     self.avgPercentile = 0
     self.weightedPercentileAvg = 0
     self.weightedPercentilePts = 0
+    self.color = color
 
     self.tourneyPtRatio = 0 #TODO this is no longer a great metric sinc ei made tourney poitns aharder to do- better metric is
     #placement ratio- what they got out of what was possible
@@ -44,7 +45,8 @@ class Player:
           'avgPercentile' : self.avgPercentile,
           'weightedPercentilePoints' : self.weightedPercentilePts,
           'weightedPercentileAvg' : self.weightedPercentileAvg,
-          'tourneyResultsDict': self.tourneyResultsDict
+          'tourneyResultsDict': self.tourneyResultsDict,
+          'color': self.color
       }
 
 

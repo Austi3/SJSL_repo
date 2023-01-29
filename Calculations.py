@@ -61,35 +61,35 @@ def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
       if placement == 1:
         perc = 1.00
       elif placement == 2:
-        perc = .90
+        perc = .93
       elif placement == 3:
-        perc = .80
+        perc = .86
 
       if tourneyObj.totalEntrants >= 12 or beatThreshold:
         if placement == 4:
-          perc = .70
+          perc = .79
     
     # TODO i think awarding points to top 3rd of bracket might make most sense??? hmmm idk
 
     # award pts to top 6 if more than 18 entrants
     if tourneyObj.totalEntrants >= 18 or beatThreshold:
       if placement == 5:
-        perc = .60
+        perc = .72
     
     # award pts to top 8 if more than 24 entrants
     if tourneyObj.totalEntrants >= 24 or beatThreshold:
       if placement == 7:
-        perc = .50
+        perc = .65
 
     # award pts to top 12 if more than 32? or 36... entrants #TODO Decidison
     if tourneyObj.totalEntrants >= 36 or beatThreshold:
       if placement == 9:
-        perc = .40
+        perc = .58
 
     # award pts to top 16 if more than 48?? entrants
     if tourneyObj.totalEntrants >= 48 or beatThreshold:
       if placement == 13:
-        perc = .30
+        perc = .51
 
     # perc = percentile/100 
     # TODO TRY COMPARING PERC AS PERCENITLE VS WHTA I SET ALSO BEAT HRTREHSOLD!!!
@@ -170,7 +170,8 @@ def updateAllPlayerScores(tourneyObj, playerObjDict):
       playerPts = calculatePlayerTourneyPts(placement, tourneyObj, playerTag)
 
       if playerTag not in playerObjDict:
-        playerObjDict[playerTag] = Player(playerTag)
+        color = getPlayerColor(playerTag)
+        playerObjDict[playerTag] = Player(playerTag, color)
       
       # TODO this is new test it
       playerObjDict[playerTag].tourneysEntered.append(tourneyObj)
@@ -297,3 +298,63 @@ def computePlayersTied(placement, numEntrants):
     return numTied #number of players tied for this placement. no longer doing the -1 thing
 
 calculatePercentile(4,30)
+
+def getPlayerColor(player):
+    if player.lower() in []:
+        c = "lawngreen"
+    elif player.lower() in ["spiro", "sauce", "hoodinii","charm", "grey"]:
+      c = "limegreen"
+    elif player.lower() in ["xavier", "vince", "secret",  "aryeh", "hunterwinthorpe"]:
+        c = "red"
+    elif player.lower() in ["noodl", "chanman", "austi", "spectro"]:
+        c = "yellow"
+    elif player.lower() in ["snogi", "consent is badass", "treestain", "a9", "azazel"]:
+        c = "orange"
+    elif player.lower() in ["boosk", "zeusie", "jacie"]:
+        c = "magenta"
+    elif player.lower() in ["alo!", "wheezy", "sly", "blase"]:
+        c = "darkviolet"
+    elif player.lower() in ["critz", "chocolatejesus", "dyla", "crest", "kurama"]:
+        c = "mediumblue"
+    else:
+        if len(player.lower()) % 3 == 0:
+          c = "dodgerblue"
+        elif len(player.lower()) % 3 == 1:
+          c = "hotpink"
+        elif len(player.lower()) % 3 == 2:
+          c = "cyan"
+    return c
+
+    """
+    snogi - orange?
+    a9- 
+    spiro- palu green
+    noodl- dk gold
+    vince- roy red
+    aryeh
+    hoodini- green
+    boosk- rob pink
+    consent-
+    critz- dark blue
+    charm- dark green
+    alo- purple
+    treestain-
+    sauce-
+    jacie- wario pants pink
+    kurama- silver
+    zeusie- puff pink
+    xavier- red
+    azazel- 
+    blase- black
+    chanman- yellow?
+    dyla- 
+    wheezy- purple
+    sly- 
+    chocjesus- dark blue
+    soulheart
+    hunter- lighter black
+    secret- red
+    grey- gray
+    austi- yellow
+    
+    """
