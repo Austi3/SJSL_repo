@@ -1,0 +1,23 @@
+Using percentile percentages oonly heavily favors the higher entrant higher pt vlaue events because lower placements get pretty damn solid total chunks of pts and 
+doesnt affect their total overall ratio whereas botb is smaller therefore lower placements will matter more it seems and for 
+less total pts but for a greater overall chunk
+
+usign the stacked perscentile threshold where i say oh u get pts if u placed low but still well at a stacked event
+DOES matter and seems to impact aryueh and hoodini decently
+
+
+
+i think the one where its combined does make the msot sense and gives a fiarly good graphj
+
+
+WHOAAAAA A9 takes a nosedive iththis ratio prob cuz he entered so much and was incosistent??? wow its a real nosedive tho
+it might be tough cuz the more u enter the more points u stand to lose so ok this is NOT THE BEST METRIC HERE!!!
+
+its interesting but like idk
+
+i should look into A9 data make sure thats right lol pritnign or writign to a file would be nice
+
+but i think MY TOURNEY AWARDING POITNS ALGORITHM MIGHT BE FLAWED AND WAAAAAY TOO SKEWED TO THE TOP-- meaning its too harsh
+should use A9 as an example by putting breakoint and seeing what he gets and comparing to braacket.com placements
+
+actually.. it seems fairly accurate. based on his average placement percentile hes a solid 60% 

@@ -11,8 +11,10 @@ class playerLvls():
         self.lvl4s = lvl4s
         self.lvl5s = lvl5s
 
-def Main():
-    masterExcelFile = "SJ Fall 2022 (Oct3- Dec23) Tournaments.xlsx"
+def Main(pleasePlot):
+    masterExcelFile = "SJ Spring 2023 Tournaments.xlsx"
+    #"SJ Q3 2022 Tournaments.xlsx"
+    #"SJ Fall 2022 (Oct3- Dec23) Tournaments.xlsx"
     rankedLvlPlayersDF = pd.read_excel(masterExcelFile, sheet_name = 2)
 
     lvl2s = rankedLvlPlayersDF['LEVEL2'].str.lower().dropna().to_list()
@@ -42,7 +44,7 @@ def Main():
         #tourney            Hyperlink              SGGName              TName,           TSeries,           Color,          TotalEntrants,          ResultsString)
         tourneyObj = Tourney(data['Hyperlink'],    data['SGGName'],     data['TName'],   data['TSeries'],   data['Color'],  data['Total Entrants'],  data['ResultsString'])
         name = str(data['SGGName'])  
-        if "hyperspace" not in name:
+        if "hyperspace" not in name and int(data['Total Entrants'])>=8:
             tourneyObjDict[name] = tourneyObj
 
     for tourney in tourneyObjDict:
@@ -55,10 +57,10 @@ def Main():
     tourneyDF = pd.DataFrame.from_records([tourneyObjDict[tournName].to_dict() for tournName in tourneyObjDict])
 
     # # Plotting Tourney Info
-    plotDataFrame(tourneyDF, 'stackedScore', 'SJ Tourneys by Stacked Score')
-    plotDataFrame(tourneyDF, 'Total Entrants', 'SJ Tourney Attendance')
-    plotDataFrame(tourneyDF, 'totalScore', 'SJ Tourneys by Total Score')
-    plotDataFrame(tourneyDF, 'stackedRatio', 'SJ Tourneys by Stacked Player Ratio')
+    plotTourneyDataFrame(tourneyDF, 'stackedScore', "Stacked Points", 'SJ Tourney Stacked Points (2022 Q4 Season)')
+    plotTourneyDataFrame(tourneyDF, 'Total Entrants', "Entrant Count", 'SJ Tourney Attendance (2022 Q4 Season)')
+    plotTourneyDataFrame(tourneyDF, 'totalScore', "Tourney Point Value (TPV)", 'SJ Tourneys by Tourney Point Value (2022 Q4 Season)')
+    plotTourneyDataFrame(tourneyDF, 'stackedRatio', "Stacked Player Index (SPI)", 'SJ Tourneys by Stacked Player Index (2022 Q4 Season)')
 
     """
     TODO  i want to have an option to plot each individual's placement at a tourney and their pt ratio gathered from that
@@ -70,23 +72,24 @@ def Main():
     """
     playerDF = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
 
+    if not pleasePlot:
+        return tourneyObjDict, playerObjDict
+
     # getPlayerTopResults(playerObjDict)
 
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'weightedPercentileAvg', 'Weighted Avg Percentile (%)', 'Top 30 Weighted Percentile Average Scores')
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'avgPercentile', "Avg Percentile (%)", 'Top 30 Average Placement Percentiles')
+    plotPlayerDataFrame(playerDF, playerObjDict, 'weightedPercentileAvg', 'Weighted Placement Percentile Average (%)', 'Top 30 Weighted Placement Percentile Averages (WPPA)')
+    plotPlayerDataFrame(playerDF, playerObjDict, 'avgPercentile', "Placement Percentile Average (%)", 'Top 30 Placement Percentile Averages (PPA)')
 
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Points Earned', 'Earned Tourney Pts of Top 30 Players (7% Incr)', False, 1)
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Points Possible', 'Max Possible Point Score', False)
+    plotPlayerDataFrame(playerDF, playerObjDict, 'earnedTourneyPts', 'Earned Tourney Points', 'Top 30 Earned Tourney Points (ETP)', False, 1)
+    plotPlayerDataFrame(playerDF, playerObjDict, 'totalPossibleTourneyPts', 'Max Tourney Points Possible', '30 Players With Highest Max Tourney Points Possible (MTPP)', False)
 
-    # plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', 'Point Ratio (Pts Earned/ Max Pts Possible %)', 'Top 30 Tourney Point Ratios (7% Incr)')
+    plotPlayerDataFrame(playerDF, playerObjDict, 'tourneyPtRatio', 'Earned Point Ratio %) ', 'Top 30 Earned Point Ratios (EPR)')
 
-    return tourneyObjDict, playerObjDict
     
 
-Main()
+Main(True)
 """
 TODO i want a look up and print function that searches for a player or tournament and outputs the info i want i need to be able to search
 this database of mine
 """
 
-# Main()

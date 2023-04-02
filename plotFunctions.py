@@ -53,37 +53,26 @@ def plotPlayerDataFrame(playerDataFrame,  playerObjDict, itemKey, yAxisLabel, pl
     plt.tight_layout()
     ax.get_legend().remove()
 
-    plt.savefig('./plotsOutput/newDir/' +plotTitle.strip() + ".png" )
+    plt.savefig('./plotsOutput/playerResultsDir/' +plotTitle.strip() + ".png" )
 
     plt.show()
 
-
-def plotPlayerPerformance(playerTag, playerObjDict, tourneyObjDict):
-    player = playerObjDict[playerTag]
-
-    placements = []
-    tnames = []
-    for tourney in player.tourneysEntered:
-        placement = tourneyObjDict[tourney].placementDict[playerTag]
-        tname =  tourneyObjDict[tourney].TName
-        placements.append(placement)
-        tnames.append(tname)
-    
-    plt.plot(tnames, placements)
-    plt.show()
 
         
 
-def plotDataFrame(tourneyDF, plotItem, plotName):
+def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName):
 
   tourneyDF = tourneyDF.sort_values(by=[plotItem], ascending=False)
 
+  tourneyDF= tourneyDF.round(2)
 #   plt.bar(tourneyDF['TName'], tourneyDF[plotItem], color = tourneyDF['Color'])
 
 
   ax = tourneyDF.plot.bar('TName',plotItem, figsize=(13, 7) , color = tourneyDF['Color'] )
   for container in ax.containers:
     ax.bar_label(container)
+  
+  plt.xlabel("Tournament")
 
   plt.xticks(rotation=80)
 
@@ -97,13 +86,13 @@ def plotDataFrame(tourneyDF, plotItem, plotName):
 
   plt.legend(handles=[botbPatch, catPatch, hopsPatch, ptbPatch, rownPatch, othrPatch])
 
-  plt.ylabel(plotItem)
+  plt.ylabel(yAxisLabel)
   plt.title(plotName)
 
 #   plt.grid( axis ='y')
   plt.tight_layout()
 
-  plt.savefig('./plotsOutput/newTournDir' +plotItem + ".png" )
+  plt.savefig('./plotsOutput/tourneyResultsDir/' +plotName.strip() + ".png" )
 
   plt.show()
 

@@ -17,9 +17,15 @@ def handleSpecialPlayers(tag):
   elif tag in ['xavier', 'Xavier']:
     tag = 'Xavier'
   elif tag.lower() in ["vince", "sapphire"]:
-    tag == "Vince"
-  elif tag.lower() in ["pee83", "treestain"]:
+    tag = "Vince"
+  elif tag.lower() in ["pee83", "treestain", "justin rodriguez"]:
     tag = "Treestain"
+  elif tag.lower() in ["spiro", "tinder god"]:
+    tag = "Spiro"
+  elif tag.lower() in ["jacie", "jesty"]:
+    tag = "Jesty"
+  elif tag.lower() in ["grey", "badfish321"]:
+    tag = "Grey"
   return tag
 
 def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
@@ -297,7 +303,7 @@ def computePlayersTied(placement, numEntrants):
 
     return numTied #number of players tied for this placement. no longer doing the -1 thing
 
-calculatePercentile(4,30)
+calculatePercentile(3,40)
 
 def getPlayerColor(player):
     if player.lower() in []:
@@ -310,7 +316,7 @@ def getPlayerColor(player):
         c = "yellow"
     elif player.lower() in ["snogi", "consent is badass", "treestain", "a9", "azazel"]:
         c = "orange"
-    elif player.lower() in ["boosk", "zeusie", "jacie"]:
+    elif player.lower() in ["boosk", "zeusie", "jesty", "ham burrito"]:
         c = "magenta"
     elif player.lower() in ["alo!", "wheezy", "sly", "blase"]:
         c = "darkviolet"
@@ -324,37 +330,3 @@ def getPlayerColor(player):
         elif len(player.lower()) % 3 == 2:
           c = "cyan"
     return c
-
-    """
-    snogi - orange?
-    a9- 
-    spiro- palu green
-    noodl- dk gold
-    vince- roy red
-    aryeh
-    hoodini- green
-    boosk- rob pink
-    consent-
-    critz- dark blue
-    charm- dark green
-    alo- purple
-    treestain-
-    sauce-
-    jacie- wario pants pink
-    kurama- silver
-    zeusie- puff pink
-    xavier- red
-    azazel- 
-    blase- black
-    chanman- yellow?
-    dyla- 
-    wheezy- purple
-    sly- 
-    chocjesus- dark blue
-    soulheart
-    hunter- lighter black
-    secret- red
-    grey- gray
-    austi- yellow
-    
-    """
