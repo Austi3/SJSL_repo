@@ -36,6 +36,12 @@ def printPlayerResults(playerTag):
     pointsEarnedList = []
     tourneyPointsList = []
     tourneyNames = []
+
+    # BESTresultsdict = player.remove_bottom_20_percent(player.tourneyResultsDict, 'percentilePtsEarned')
+    # print(len(BESTresultsdict))
+    print(len(player.tourneyResultsDict))
+    # kill
+
     for tournKey in player.tourneyResultsDict:
 
         player.tourneyResultsDict[tournKey].printInfo()
@@ -75,6 +81,6 @@ def printPlayerResults(playerTag):
     plt.show()
 
 
-  
 
-printPlayerResults("eo")
+
+printPlayerResults("A9")
