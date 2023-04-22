@@ -9,6 +9,7 @@ from gspread_dataframe import set_with_dataframe
 
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+import json
 
 
 """
@@ -45,7 +46,7 @@ def handleSpecialPlayers(tag):
   tag= tag.replace("~", "") # need this til i get rid of ~~~ formatting
   if tag.lower() in ['snogi', 'critz but retired', '<3 brisket']:
     tag = 'Snogi'
-  elif tag.lower() in ['chanman', 'chan', 'poop87', 'funnyMoments with ridley']:
+  elif tag.lower() in ['chanman', 'chan', 'poop87', 'funnymoments with ridley']:
     tag = 'Chanman'
   elif 'Poop' in tag:
     print("my name is", tag.lower())
@@ -55,7 +56,7 @@ def handleSpecialPlayers(tag):
     tag = 'Xavier'
   elif tag.lower() in ["vince", "sapphire"]:
     tag = "Vince"
-  elif tag.lower() in ["hunter", "Hunterwinthorpe"]:
+  elif tag.lower() in ["hunter", "hunterwinthorpe"]:
     tag = "Hunter"
   elif tag.lower() in ["pee83", "treestain", "justin rodriguez"]:
     tag = "Treestain"
@@ -65,11 +66,14 @@ def handleSpecialPlayers(tag):
     tag = "Jesty"
   elif tag.lower() in ["grey", "badfish321"]:
     tag = "Grey"
+
   return tag
 
 
-def getTourneyLinks(docName, sheetName):
-   # Returns dataframe of the spreadsheet containing tourney info
+
+def updateTourneyDataSheet(docName, sheetName):
+    # Will update the google sheet specified
+
 
     # Open the worksheet and get all the data as a list of lists
     sheet = client.open(docName).worksheet(sheetName)
@@ -78,24 +82,38 @@ def getTourneyLinks(docName, sheetName):
     # Convert the data to a pandas DataFrame
     df = pd.DataFrame(data[1:], columns=data[0])
 
-    return df
 
-
-def addTourneyInfo(df):
    # loop through each row of the DataFrame and extract the name from the hyperlink URL
-    tournNames = []
-    tournAttendance = []
+   # store in a list to be added to the dataframe in order to match the links
+    tournNamesList = []
+    smashGGNameIDsList = []
+    tournAttendanceList = []
     tournResults = []
+    tournResultsDictsList=[]
+
     for index, row in df.iterrows():
         tournURL = row['Tourney URL']
+        if df.loc[index, 'Tourney SmashGG ID'] != "":
+           continue
+
+        """TODO inset a check here to see hey if columns are empty extract"""
+        print("url is", tournURL)
         smashGGTourneyName = tournURL.split('/')[-3]
         eventString = tournURL.split('/')[-1]
 
         tournament = smash.tournament_show(smashGGTourneyName)
         tournName = tournament['name']
-        tournAttendance = int(tournament['entrants'])
-
+        tournAttendance = tournament['entrants']
         
+
+        # add a value to the "new_column" column of the row with index 0
+        df.loc[index, 'Tourney SmashGG ID'] = smashGGTourneyName
+        df.loc[index, 'Tourney Name'] = tournName
+        df.loc[index, 'Attendence'] = tournAttendance
+        
+
+        tournResultsDict = {}
+
         resultsList = []
         i = 0
         pageNum = 1
@@ -108,40 +126,40 @@ def addTourneyInfo(df):
 
             name = playerDataResult['tag'].split('| ')[-1]
             placement = playerDataResult['finalPlacement']
-            # TODO i technically could get player info directly whyile im here
-            # seed = playerDataResult['seed']
 
+            # TODO i technically could get player info directly whyile im here. try this later?
+            # entrant_sets = smash.tournament_show_entrant_sets(smashGGTourneyName, eventString, 'acorn')
+            # print(entrant_sets)
+            # seed = playerDataResult['seed']
         
             realTag = handleSpecialPlayers(name)
-            print(playerDataResult)
-            print(realTag, placement)
-            kill
+            tournResultsDict[realTag] = placement
+    
+        result_str = json.dumps(tournResultsDict)
+        df.loc[index, 'Results'] = result_str
 
-        # except:
-        #     print("FAILURE ON: ", smashGGTourneyName)
-        #names.append(smashGGTourneyName)
+        
+        # append all the info to the overall list
+        # tournNamesList.append(tournName)
+        # # smashGGNameIDsList.append(smashGGTourneyName)
+        # tournAttendanceList.append(tournAttendance)
+        # tournResultsDictsList.append(tournResultsDict)
 
-        #df['SmashGG Name'] = names
+    
 
-
-
-
-
-    # tournament = smash.tournament_show(tournament_slug)
-
-    # # retrieve the entrants in the tournament
-    # entrants = smash.tournament_show_entrants(tournament_slug, )
-
-    # # print the tag of each entrant
-    # for e in entrants:
-    #     print(e["tag"])
+    # df['Results'] = tournResultsDictsList
+    # print(tournResultsDictsList)
 
 
-    return df
+    sheet.update([df.columns.values.tolist()] + df.values.tolist())
 
-tourneyDF = getTourneyLinks("2023 SJ Smash Sheet", "testTourneysSheet")
-tourneyDF = addTourneyInfo(tourneyDF)
-# print(tourneyDF)
+    return
+
+############################################################
+docName = "2023 SJ Smash Sheet"
+sheetName = "testTourneysSheet"
+
+updateTourneyDataSheet(docName, sheetName)
 
 
 
