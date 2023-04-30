@@ -87,7 +87,15 @@ def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
   return playerPts
 
 
-def getTourneyScores(tourneyObj, playerLvlsObj):
+def get_player_points(player_name, point_dict):
+    for points, players in point_dict.items():
+      if player_name in players:
+        return float(points), True
+        
+    return 0, False
+
+
+def getTourneyScores(tourneyObj, playerLvlsDict):
   """
   TODO i should make it so that any tourney below 8 entrants has a score of 0
   also i dont have a way to handle DQs yet
@@ -101,25 +109,11 @@ def getTourneyScores(tourneyObj, playerLvlsObj):
   tourneyObj.attendanceScore = tourneyObj.totalEntrants // 2
 
   for playerTag in tourneyObj.placementDict:
-    lowerName = playerTag.lower()
     
-    """
-    TODO do i like 1.5 increments better??? 
-    """
-    if lowerName in playerLvlsObj.lvl5s:
-      tourneyObj.stackedScore += 6
-      tourneyObj.notableEntrants.append(lowerName)
-    elif lowerName in playerLvlsObj.lvl4s:
-      tourneyObj.stackedScore += 4.5
-      tourneyObj.notableEntrants.append(lowerName)
-    elif lowerName in playerLvlsObj.lvl3s:
-      tourneyObj.stackedScore += 3
-      tourneyObj.notableEntrants.append(lowerName)
-    elif lowerName in playerLvlsObj.lvl2s:
-      tourneyObj.stackedScore += 1.5
-      tourneyObj.notableEntrants.append(lowerName)
-    else:
-      tourneyObj.otherEntrants.append(lowerName)
+    points, isNotable = get_player_points(playerTag, playerLvlsDict)
+    if isNotable:
+      tourneyObj.stackedScore += points
+      tourneyObj.notableEntrants.append(playerTag)
 
     tourneyObj.totalScore = tourneyObj.attendanceScore  + tourneyObj.stackedScore
     # tourneyObj.stackedRatio = len(tourneyObj.notableEntrants)/ tourneyObj.totalEntrants

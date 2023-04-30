@@ -6,22 +6,33 @@ from Calculations import *
 docName = "2023 SJ Smash Sheet"
 tourneySheetName = "2023 Q2 Tourneys"
 clusterSheetName = '2023Q2 Player Clusters'
+
+seasonName = "2023 Q2"
  
 def MAIN():
     WriteUpdateTourneyDataSheet(docName, tourneySheetName)
 
     tourneyObjDict = getTourneyObjDict(docName, tourneySheetName)
 
-    writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, 50, 4)
+    
+    numClusters = 7
+    ppaCutoff = 0
 
-    playerLvlsObj = getPlayerLevels(docName, clusterSheetName)
+    writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, ppaCutoff, numClusters)
+    
+    ptValueIncrement = 1.5
+    playerLvlDict = getPlayerLevels(docName, clusterSheetName ,ptValueIncrement)
+
 
 
     playerObjDict = {}
 
     for tourney in tourneyObjDict:
-        getTourneyScores(tourneyObjDict[tourney], playerLvlsObj)
+        getTourneyScores(tourneyObjDict[tourney], playerLvlDict)
         updateAllPlayerScores(tourneyObjDict[tourney], playerObjDict) 
+
+    tourneyDF = pd.DataFrame.from_records([tourneyObjDict[tournName].to_dict() for tournName in tourneyObjDict])
+    plotTourneyDataFrame(tourneyDF, 'stackedScore', "Stacked Points", 'SJ Tourney Stacked Points (%s Season)' % seasonName)
 
 MAIN()
 # playerDF = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
