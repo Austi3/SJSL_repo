@@ -6,7 +6,7 @@ class Player:
     self.tag = tag
     self.tourneysEntered = []
     self.tourneyResultsDict = {} 
-    """ TODO key is tourneyname, value is an object of tournament information for the tourney entered by player"""
+    """ NOTE: key is tourneyname, value is an object of tournament information for the tourney entered by player"""
     self.numTourneysEntered = 0
     self.earnedTourneyPts = 0
     self.totalPossibleTourneyPts = 0
@@ -19,7 +19,7 @@ class Player:
     self.weightedPercentilePts = 0
     self.color = color
 
-    self.tourneyPtRatio = 0 #TODO this is no longer a great metric sinc ei made tourney poitns aharder to do- better metric is
+    self.tourneyPtRatio = 0 #TODO this is no longer a great metric since i made tourney poitns aharder to do- better metric is
     #placement ratio- what they got out of what was possible
 
   def printPlayerInfo(self):
