@@ -1,12 +1,9 @@
 
-"""
-TODO!!! rename a lot of these to make more sense
-"""
 from enum import Enum
 import regex as re
 
 class Tourney:
-    def __init__(self, linkName, startgglink, TName, tseries, color, totalEntrants, resultsString):
+    def __init__(self, linkName, startgglink, TName, tseries, color, totalEntrants, resultsDict):
       self.fullLink = linkName
       self.smashGGlink = startgglink
       self.TName = TName
@@ -15,7 +12,7 @@ class Tourney:
       self.tseries = tseries
       self.color = color
       self.totalEntrants = totalEntrants
-      self.resultsString = resultsString
+      self.placementDict = resultsDict
 
       """
       values to be calculated later
@@ -27,7 +24,6 @@ class Tourney:
       self.notableEntrants = []
       self.otherEntrants = []
       self.allEntrants = []
-      self.placementDict = {}
 
 
     def to_dict(self):
@@ -39,7 +35,6 @@ class Tourney:
             'Color': self.color,
             'Total Entrants': self.totalEntrants,
 
-            'resultsString' : self.resultsString,
             'notable entrants': self.notableEntrants,
             'otherEntrants': self.otherEntrants,
             'placementDict':self.placementDict,
