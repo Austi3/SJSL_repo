@@ -1,7 +1,4 @@
 
-"""
-TODO!!! rename a lot of these to make more sense
-"""
 from enum import Enum
 import regex as re
 
