@@ -22,8 +22,11 @@ import matplotlib.pyplot as plt
 
 # Dictionary with point values and names
 docName = "2023 SJ Smash Sheet"
-tourneySheetName = "2023 Q2 Tourneys"
-clusterSheetName = '2023Q2 Player Clusters'
+seasonName = "2023 Q1"
+
+tourneySheetName = "%s Tourneys" % seasonName
+clusterSheetName = '%s Player Clusters'  % seasonName
+
 ptValueIncrement = 1.5
 tier_list = getPlayerLevels(docName, clusterSheetName ,ptValueIncrement)
 

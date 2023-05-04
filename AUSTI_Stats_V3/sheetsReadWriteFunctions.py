@@ -73,7 +73,10 @@ def handleSpecialPlayers(tag):
     tag = "Jesty"
   elif tag.lower() in ["grey", "badfish321"]:
     tag = "Grey"
-
+  elif tag.lower() in ["waliu", "dak"]:
+      tag = "dak"
+  elif tag.lower() in ["torrent", "roommate", "harper"]:
+    tag = "torrent"
   return tag
 
 
@@ -209,6 +212,7 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
             tournament = smash.tournament_show(smashGGTourneyName) # look up the tournament and get the dictionary object of data
         except:
            print("ERROR")
+           break
         
         # tournName = tournament['name']
         tournAttendance = tournament['entrants']
@@ -233,7 +237,11 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
         i = 0
         pageNum = 1
         while i <= tournAttendance:
-            resultsList += smash.tournament_show_entrants(smashGGTourneyName, eventString, pageNum)
+            try:
+              resultsList += smash.tournament_show_entrants(smashGGTourneyName, eventString, pageNum)
+            except:
+               print("ERROR WITH ENTRATNS")
+               break
             i+= 25 # this is max number of entratns that appear on a startgg page
             pageNum+= 1
 
@@ -301,7 +309,7 @@ def writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, cut
     player_ppa = getPlacementPercentileAverages(tourneyDF)
 
     # Filter out players with placement percentiles below cutoffThreshold
-    player_ppa = player_ppa[player_ppa['avg_placement_percentile'] > cutoffThreshold]  
+    player_ppa = player_ppa[player_ppa['avg_placement_percentile'] >= cutoffThreshold]  
 
     # Create a matrix of placement percentile averages for each player
     ppa_matrix = player_ppa['avg_placement_percentile'].values.reshape(-1, 1)
@@ -311,7 +319,7 @@ def writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, cut
     ppa_matrix_scaled = scaler.fit_transform(ppa_matrix)
 
     # Cluster the players using K-Means
-    kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+    kmeans = KMeans(n_clusters=num_clusters, n_init=5, random_state=0)
     kmeans.fit(ppa_matrix_scaled)
 
     # Get the cluster labels for each player

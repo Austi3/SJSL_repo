@@ -6,8 +6,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import scipy.stats as stats
+import os
 
-def plotPlayerDataFrame(playerDataFrame,  playerObjDict, itemKey, yAxisLabel, plotTitle, min5Events= True, roundPlace = 2):
+def plotPlayerDataFrame(playerDataFrame,  playerObjDict, itemKey, yAxisLabel, plotTitle, seasonStr, min5Events= True, roundPlace = 2):
 
     """ TODO fix or move this but this is currently how i filter out players with less than 5 tourneys"""
     if min5Events:
@@ -53,14 +54,18 @@ def plotPlayerDataFrame(playerDataFrame,  playerObjDict, itemKey, yAxisLabel, pl
     plt.tight_layout()
     ax.get_legend().remove()
 
-    plt.savefig('./plotsOutput/playerResultsDir/' +plotTitle.strip() + ".png" )
+    directory_name = './plotsOutput/playerResultsDir/' + seasonStr
+    if not os.path.exists(directory_name):
+        os.mkdir(directory_name)
 
-    plt.show()
+    plt.savefig(directory_name + plotTitle.strip() + ".png" )
+
+    # plt.show()
 
 
         
 
-def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName):
+def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName, seasonStr):
 
   tourneyDF = tourneyDF.sort_values(by=[plotItem], ascending=False)
 
@@ -90,7 +95,11 @@ def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName):
 #   plt.grid( axis ='y')
   plt.tight_layout()
 
-  # plt.savefig('./plotsOutput/tourneyResultsDir/' +plotName.strip() + ".png" )
+  directory_name = './plotsOutput/tourneyResultsDir/' + seasonStr
+  if not os.path.exists(directory_name):
+      os.mkdir(directory_name)
 
-  plt.show()
+  plt.savefig(directory_name +plotName.strip() + ".png" )
+
+  # plt.show()
 
