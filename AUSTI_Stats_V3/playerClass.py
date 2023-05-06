@@ -36,19 +36,20 @@ class Player:
     print("weighted percentile points: ", np.round(self.weightedPercentilePts,2))
     print("weighted percentile avg (which = pt ratio) ", np.round(self.weightedPercentileAvg,2))
 
-  def remove_bottom_20_percent(self, d: dict, attr_name: str) -> dict:
-      n = len(d)
-      if n <= 7:
-          return d
-      sorted_dict = sorted(d.items(), key=lambda x: getattr(x[1], attr_name))
-      bottom_20_percent = math.ceil(n * 0.2)
-      if bottom_20_percent == 0:
-          return d
-      else:
-          bottom_keys = [key for key, value in sorted_dict[:bottom_20_percent]]
-          for key in bottom_keys:
-              del d[key]
-          return d
+  # TODO this doesnt work yet
+  # def remove_bottom_20_percent(self, d: dict, attr_name: str) -> dict:
+  #     n = len(d)
+  #     if n <= 7:
+  #         return d
+  #     sorted_dict = sorted(d.items(), key=lambda x: getattr(x[1], attr_name))
+  #     bottom_20_percent = math.ceil(n * 0.2)
+  #     if bottom_20_percent == 0:
+  #         return d
+  #     else:
+  #         bottom_keys = [key for key, value in sorted_dict[:bottom_20_percent]]
+  #         for key in bottom_keys:
+  #             del d[key]
+  #         return d
 
   def to_dict(self):
       return {
