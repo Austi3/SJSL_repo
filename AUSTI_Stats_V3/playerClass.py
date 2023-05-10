@@ -54,14 +54,14 @@ class Player:
   def to_dict(self):
       return {
           'tag': self.tag,
-          'tourneysEntered' : self.tourneysEntered,
-          'earnedTourneyPts' : self.earnedTourneyPts,
-          'totalPossibleTourneyPts' : self.totalPossibleTourneyPts,
-          'tourneyPtRatio' : self.tourneyPtRatio,
-          'numTourneysEntered' : self.numTourneysEntered,
-          'avgPercentile' : self.avgPercentile,
-          'weightedPercentilePoints' : self.weightedPercentilePts,
-          'weightedPercentileAvg' : self.weightedPercentileAvg,
+          'Tourneys Attended' : self.tourneysEntered,
+          'Earned Tourney Points' : self.earnedTourneyPts,
+          'Max Points Possible' : self.totalPossibleTourneyPts,
+          'Earned Point Ratio' : self.tourneyPtRatio,
+          'Number of Tourneys Entered' : self.numTourneysEntered,
+          'Placement Percentile Average' : self.avgPercentile,
+          'Weighted Points' : self.weightedPercentilePts,
+          'Weighted Placement Percentile Average' : self.weightedPercentileAvg,
           'tourneyResultsDict': self.tourneyResultsDict,
           'color': self.color
       }

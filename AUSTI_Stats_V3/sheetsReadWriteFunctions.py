@@ -363,7 +363,7 @@ def writePlayerDataFrame(docName, sheetName, playerDF):
   sheet.clear()
 
   df = playerDF
-  df = playerDF.drop(columns=['tourneysEntered', 'tourneyResultsDict'])
+  df = playerDF.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
 
   header = list(df.columns)
   # insert the header as the first row in the worksheet
@@ -388,7 +388,7 @@ def writePlayerDataFrame(docName, sheetName, playerDF):
 
     # copyPlayerDF = playerDF
 
-    # copyPlayerDF = copyPlayerDF.drop(columns=['tourneysEntered', 'tourneyResultsDict'])
+    # copyPlayerDF = copyPlayerDF.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
 
     # print(copyPlayerDF)
 
