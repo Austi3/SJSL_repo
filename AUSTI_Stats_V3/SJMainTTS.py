@@ -3,9 +3,9 @@ from plotFunctions import *
 from Calculations import *
 
  
-docName = "2023 SJ Smash Sheet"
+docName = "Sector X Smash League Data"
 
-seasonName = "2023 Q1"
+seasonName = "Smash League"
 
 tourneySheetName = "%s Tourneys" % seasonName
 clusterSheetName = '%s Player Clusters'  % seasonName
@@ -33,7 +33,7 @@ def MAIN():
 
     for tourney in tourneyObjDict:
         getTourneyScores(tourneyObjDict[tourney], playerLvlDict)
-        updateAllPlayerScores(tourneyObjDict[tourney], playerObjDict) 
+        updateAllPlayerData(tourneyObjDict[tourney], playerObjDict) 
 
 
     tourneyDF = pd.DataFrame.from_records([tourneyObjDict[tournName].to_dict() for tournName in tourneyObjDict])
@@ -44,12 +44,13 @@ def MAIN():
 
     user_choice, choiceIdx = get_user_choice()
 
+
     showPlot = True
     numPlayers = 25
     # savePlot = False
     for plotItem in user_choice:
 
-        if plotItem in ["Earned Tourney Points", "Max Points Possible", "Number of Tourneys Entered"]:
+        if plotItem in ["Earned League Points", "Max Points Possible", "Number of Tourneys Entered"]:
             minTourneys = 0
         else: 
             minTourneys = 5

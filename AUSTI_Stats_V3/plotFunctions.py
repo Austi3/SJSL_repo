@@ -9,7 +9,7 @@ import scipy.stats as stats
 import os
 
 # these are the options for what can be plotted in the player graphs
-playerGraphOptions = ["Earned Tourney Points", "Max Points Possible", "Earned Point Ratio", "Number of Tourneys Entered", 
+playerGraphOptions = ["Earned League Points", "Max Points Possible", "Earned Point Ratio", "Number of Tourneys Entered", 
         "Placement Percentile Average", "Weighted Placement Percentile Average", "Plot All"]
 
 def get_user_choice():

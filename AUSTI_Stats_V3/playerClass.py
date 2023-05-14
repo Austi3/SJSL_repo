@@ -55,7 +55,7 @@ class Player:
       return {
           'tag': self.tag,
           'Tourneys Attended' : self.tourneysEntered,
-          'Earned Tourney Points' : self.earnedTourneyPts,
+          'Earned League Points' : self.earnedTourneyPts,
           'Max Points Possible' : self.totalPossibleTourneyPts,
           'Earned Point Ratio' : self.tourneyPtRatio,
           'Number of Tourneys Entered' : self.numTourneysEntered,

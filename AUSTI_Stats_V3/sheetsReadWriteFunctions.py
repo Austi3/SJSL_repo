@@ -175,7 +175,7 @@ def getTourneyObjDict(docName, sheetName):
 
 def WriteUpdateTourneyDataSheet(docName, sheetName):
     """
-    Will update the google sheet specified. Sheet passed in must be formatted with proper headers
+    Will update the google sheet specified with initial smash.gg data read in. Sheet passed in must be formatted with proper headers
     to match the dataframe and contain URLs in the first column of the format:
     start.gg/tournament/<smashGGTourneyName>/event/<eventString>.
     """

@@ -18,6 +18,7 @@ class Tourney:
       values to be calculated later
       """
       self.attendanceScore = 0
+      self.tier = "None"
       self.stackedScore = 0
       self.totalScore = 0
       self.stackedRatio = 0

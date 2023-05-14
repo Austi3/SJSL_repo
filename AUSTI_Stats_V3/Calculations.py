@@ -3,6 +3,112 @@ from playerClass import *
 import numpy as np
 
 
+
+def getLeagueTourneyTier(tourneyObj):
+  """
+  This is to be dynamically set in accordance with Sector X tiers.
+
+  ALSO you can change tourneyObj.stotalscore directly here!!! if u want fixed score or to add bonuses or what not idl 
+
+  """
+  
+  if tourneyObj.totalScore >= 64:
+    tier = "S"
+  elif tourneyObj.totalScore >= 48:
+    tier = "A+"
+  elif tourneyObj.totalScore >= 36:
+    tier = "A"
+  elif tourneyObj.totalScore >= 24:
+    tier = "B"
+  elif tourneyObj.totalScore >= 16:
+    tierPoints = 20
+    tier = "C"
+  elif tourneyObj.totalScore <= 16:
+    tier = "D"
+
+  # print("tier for", tourneyObj.TName, tier, tourneyObj.totalScore)
+  return tier
+
+
+def buildPointPlacementDictionary(pointIncrement):
+  """
+  If u want to dynamically assign points by placement u can use this
+  """
+
+  placements = [1,2,3,4,5,7,9,13]
+
+  pointDict = {}
+  maxPoints = len(placements) * pointIncrement
+
+  value = maxPoints
+
+  for place in placements:
+    pointDict[place] = value
+    value -= pointIncrement
+
+  return pointDict
+
+
+def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
+  """
+  Returns the amount of points for the league the player earned at a given tourney. 
+  NOTE: not sure how to use dueling points yet, would need a separate variable to track or soemthing and dont wnat it in this function.
+
+
+  Currently formula is (Placement Percentile * Tourney Point Value * 0.5) + Place Bonus +? Bounty Bonus?
+
+  ORRR it can just be the placement points since the tiers divides that up already
+  """
+  placement = int(placement)
+  percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
+
+
+  earnedWeightedPoints = round((percentile/100) * tourneyObj.totalScore)
+
+  myIncrement = 10 
+  """THIS INCREMENT CAN BE CHANGED"""
+  placementBonusDict = buildPointPlacementDictionary(myIncrement)
+  """
+  ZACK! this above is what u can award placement bonus poitns to. we can mess with this as needed as well as these 2 functions
+
+  NOTE: including this means that max points possible drastically changes. every tourney u enter * 40
+  """
+
+  tourneyTier = tourneyObj.tier
+
+  placementPoints = 0
+  if tourneyTier in ["S"]:
+    # award points to top 16
+    if placement < 17:
+      placementPoints = placementBonusDict[placement]
+  elif tourneyTier in ["A", "A+"]:
+    # award points bonus to top 12
+    if placement < 13:
+      placementPoints = placementBonusDict[placement]
+
+  elif tourneyTier in ["B", "C"]:
+    # top 8
+    if placement < 9:
+      placementPoints = placementBonusDict[placement]
+  
+  elif tourneyTier in ["D"]:
+    if placement < 6:
+      # top 6
+      placementPoints = placementBonusDict[placement]
+  
+  # totalPointsForTourney = earnedWeightedPoints*.5 + placementPoints
+  totalPointsForTourney = placementPoints
+
+
+  # print(playerTag, placement, tourneyTier, earnedWeightedPoints, placementPoints, totalPointsForTourney)
+  return totalPointsForTourney
+
+
+                     
+
+
+
+
 def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
   """
   TODO!!!!!! so this calculation is inherently flawed and needs to be updated. what im noticing now is:
@@ -88,6 +194,9 @@ def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
 
 
 def get_player_points(player_name, point_dict):
+    """
+    gets points for notable entrants
+    """
     for points, players in point_dict.items():
       if player_name in players:
         return float(points), True
@@ -97,14 +206,13 @@ def get_player_points(player_name, point_dict):
 
 def getTourneyScores(tourneyObj, playerLvlsDict):
   """
-  TODO i should make it so that any tourney below 8 entrants has a score of 0
-  also i dont have a way to handle DQs yet
+  This parses through a tournyes attendants and keeps incrementing points for the tourneys score based on its entrants
+  it can then get the tier of the tourney. beta phase rn
 
   This also should be modified but right now the methodology is:
   - Each lvl player is worth a corresponding amount of points
   - The attendence score is half total entrants rounded down
   """
-
   
   tourneyObj.attendanceScore = tourneyObj.totalEntrants // 2
 
@@ -117,35 +225,28 @@ def getTourneyScores(tourneyObj, playerLvlsDict):
 
     tourneyObj.totalScore = tourneyObj.attendanceScore  + tourneyObj.stackedScore
     # tourneyObj.stackedRatio = len(tourneyObj.notableEntrants)/ tourneyObj.totalEntrants
-    tourneyObj.stackedRatio = tourneyObj.stackedScore/ (tourneyObj.totalEntrants* 4.5)
+    tourneyObj.stackedRatio = tourneyObj.stackedScore/ (tourneyObj.totalEntrants* 4.5) #TODO this 4.5 number is for scaling i should make it the 
+    # average or soemthing
+
+  tourneyObj.tier = getLeagueTourneyTier(tourneyObj)
+  print(tourneyObj.TName, tourneyObj.tier, " Tier")
 
 
 
-def makeTourneyPlacementDict(tourneyObj):
-
-  # first build dictionary of all players by parsing the results string I jankily made
-  # the dictionary has the key as the player's name and the value as the place they got at 
-  # the particular tourney
-  uglyPlayerString = tourneyObj.resultsString.split("$$")
-  for playerStr in uglyPlayerString:
-    if playerStr:
-      try:
-        tag = playerStr.split("~~~")[0]
-        tag = handleSpecialPlayers(tag)
-        place =  playerStr.split("~~~")[1]
-      except:
-        print("UH OH something went wrong getting player's name for ", tourneyObj.officialName)
-        break
-      tourneyObj.placementDict[tag] = place 
 
 
-def updateAllPlayerScores(tourneyObj, playerObjDict):
+def updateAllPlayerData(tourneyObj, playerObjDict):
 
     for playerTag in tourneyObj.placementDict:
 
       placement = tourneyObj.placementDict[playerTag]
 
-      playerPts = calculatePlayerTourneyPts(placement, tourneyObj, playerTag)
+      #playerPts = calculatePlayerTourneyPts(placement, tourneyObj, playerTag)
+      """
+      TODO LEAGUE FUNCTION CALL HERE
+      """
+      playerPts = getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag)
+
 
       if playerTag not in playerObjDict:
         color = getPlayerColor(playerTag)
@@ -209,14 +310,8 @@ def calculatePercentile(placement, numEntrants):
   #num players you did STRICTLY better than = numEntrants - (placement -1)
   """
 
-  # TODO I  NEED TO CALCULATE NUM PLAYERS WORSE!!!! ITS NOT TIED!!!
-
   percentile = (numStrictlyBetter/ numEntrants) * 100
 
-  # print("Placement/entrants", placement, "/", numEntrants, "PERCENTILE IS: ", percentile)
-  
-  """THIS RETURNS A WHOLE NUMBER OUT OF 100"""
-  # print("percentile is ", percentile)
   return percentile 
 
 
