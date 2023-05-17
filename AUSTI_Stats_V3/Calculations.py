@@ -11,37 +11,42 @@ def getLeagueTourneyTier(tourneyObj):
   ALSO you can change tourneyObj.stotalscore directly here!!! if u want fixed score or to add bonuses or what not idl 
 
   """
-  
-  if tourneyObj.totalScore >= 64:
+  # increments of 15??? do i like this for tiers?
+  # the way i calculate dthis is if there were all stacked players in attendence,
+  # avg it to 5 pts per player. then whwhat would 5 x player count be to get a tourney to this tier
+  #but also factor in awarding points to t5 x top 16 of bracket etc
+  if tourneyObj.totalScore >= 80:
     tier = "S"
-  elif tourneyObj.totalScore >= 48:
+  elif tourneyObj.totalScore >= 70:
     tier = "A+"
-  elif tourneyObj.totalScore >= 36:
+  elif tourneyObj.totalScore >= 60:
     tier = "A"
-  elif tourneyObj.totalScore >= 24:
+  elif tourneyObj.totalScore >= 50:
+    tier = "B+"
+  elif tourneyObj.totalScore >= 40:
     tier = "B"
-  elif tourneyObj.totalScore >= 16:
-    tierPoints = 20
+  elif tourneyObj.totalScore >= 30:
     tier = "C"
-  elif tourneyObj.totalScore <= 16:
+  elif tourneyObj.totalScore < 30:
     tier = "D"
 
   # print("tier for", tourneyObj.TName, tier, tourneyObj.totalScore)
   return tier
 
 
-def buildPointPlacementDictionary(pointIncrement):
+def buildPointPlacementDictionary(pointIncrement, maxPoints):
   """
   If u want to dynamically assign points by placement u can use this
+
+  NOTE: right now i have this set to:
+  1st: 50, 2nd: 45, 3rd: 40, 4th: 35, 5th: 30, 7th: 25, 9th: 20, 13th: 15
   """
 
   placements = [1,2,3,4,5,7,9,13]
 
   pointDict = {}
-  maxPoints = len(placements) * pointIncrement
 
   value = maxPoints
-
   for place in placements:
     pointDict[place] = value
     value -= pointIncrement
@@ -65,9 +70,10 @@ def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
 
   earnedWeightedPoints = round((percentile/100) * tourneyObj.totalScore)
 
-  myIncrement = 10 
+  myIncrement = 5 
+  maxPoints = 50
   """THIS INCREMENT CAN BE CHANGED"""
-  placementBonusDict = buildPointPlacementDictionary(myIncrement)
+  placementBonusDict = buildPointPlacementDictionary(myIncrement, maxPoints)
   """
   ZACK! this above is what u can award placement bonus poitns to. we can mess with this as needed as well as these 2 functions
 
@@ -81,23 +87,28 @@ def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
     # award points to top 16
     if placement < 17:
       placementPoints = placementBonusDict[placement]
-  elif tourneyTier in ["A", "A+"]:
+  elif tourneyTier in ["A+", "A"]:
     # award points bonus to top 12
     if placement < 13:
       placementPoints = placementBonusDict[placement]
 
-  elif tourneyTier in ["B", "C"]:
+  elif tourneyTier in ["B+", "B"]:
     # top 8
     if placement < 9:
       placementPoints = placementBonusDict[placement]
   
-  elif tourneyTier in ["D"]:
+  elif tourneyTier in ["C"]:
     if placement < 6:
       # top 6
       placementPoints = placementBonusDict[placement]
+
+    elif tourneyTier in ["D"]:
+      if placement <= 4:
+        # top 4
+        placementPoints = placementBonusDict[placement]  
   
-  # totalPointsForTourney = earnedWeightedPoints*.5 + placementPoints
-  totalPointsForTourney = placementPoints
+  totalPointsForTourney = earnedWeightedPoints + placementPoints
+  # totalPointsForTourney = placementPoints
 
 
   # print(playerTag, placement, tourneyTier, earnedWeightedPoints, placementPoints, totalPointsForTourney)
@@ -105,92 +116,9 @@ def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
 
 
                      
+######################################################################## above this is all sector league only atm
 
 
-
-
-def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
-  """
-  TODO!!!!!! so this calculation is inherently flawed and needs to be updated. what im noticing now is:
-  players own worth is counted
-  the percentage of points  might be too strong- like if 2nd gets 95% is that right? maybe a bonus is needed 
-  for top 8??? 
-  maybe thresholds are in order like 1st gets 100%. 2nd gets 95%. 3rd gets 90 etc. defined up to 33rd
-  """
-  
-  if not placement:
-    print("error: NO PLACEMENT FOUND for a player",tourneyObj.officialName, tourneyObj.placementDict)
-    playerPts = 0
-  else:
-
-    # NOTE this was my original percentage calculation- based off of total entrants and placement
-    # perc = ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants)
-    """
-    """
-    placement = int(placement)
-    # NOTE this is my fixed percentage model- may want to adjust-- MY NEW PERCENTILE MODEL COULD DO IT!!!
-    # its much less arbitrary and scales
-    
-    percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
-
-    percentileAbove = 100 - percentile
-    
-    stackedThreshold = tourneyObj.stackedRatio * 100
-
-  
-    beatThreshold = False
-    if stackedThreshold > percentileAbove:
-      beatThreshold = True
-      #print(tourneyObj.TName, stackedThreshold, percentileAbove, placement)
-
-    perc = 0
-    if tourneyObj.totalEntrants >= 8:
-      if placement == 1:
-        perc = 1.00
-      elif placement == 2:
-        perc = .93
-      elif placement == 3:
-        perc = .86
-
-      if tourneyObj.totalEntrants >= 12 or beatThreshold:
-        if placement == 4:
-          perc = .79
-    
-    # TODO i think awarding points to top 3rd of bracket might make most sense??? hmmm idk
-
-    # award pts to top 6 if more than 18 entrants
-    if tourneyObj.totalEntrants >= 18 or beatThreshold:
-      if placement == 5:
-        perc = .72
-    
-    # award pts to top 8 if more than 24 entrants
-    if tourneyObj.totalEntrants >= 24 or beatThreshold:
-      if placement == 7:
-        perc = .65
-
-    # award pts to top 12 if more than 32? or 36... entrants #TODO Decidison
-    if tourneyObj.totalEntrants >= 36 or beatThreshold:
-      if placement == 9:
-        perc = .58
-
-    # award pts to top 16 if more than 48?? entrants
-    if tourneyObj.totalEntrants >= 48 or beatThreshold:
-      if placement == 13:
-        perc = .51
-
-    # perc = percentile/100 
-    # TODO TRY COMPARING PERC AS PERCENITLE VS WHTA I SET ALSO BEAT HRTREHSOLD!!!
-
-    """
-    WHAT I LEARNED- percentile only is no good, and no percentile 
-    
-    means people dont get enough pts?
-    """
-    playerPts = perc * tourneyObj.totalScore
-
-    # playerPts = tourneyObj.totalScore/np.sqrt(placement)
-
-  return playerPts
 
 
 def get_player_points(player_name, point_dict):
@@ -229,7 +157,7 @@ def getTourneyScores(tourneyObj, playerLvlsDict):
     # average or soemthing
 
   tourneyObj.tier = getLeagueTourneyTier(tourneyObj)
-  print(tourneyObj.TName, tourneyObj.tier, " Tier")
+  print(tourneyObj.TName, tourneyObj.tier, "Tier")
 
 
 
@@ -397,3 +325,88 @@ def getPlayerColor(player):
         elif len(player.lower()) % 3 == 2:
           c = "cyan"
     return c
+
+
+# this was my original and official tourney point calculator
+# def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
+#   """
+#   TODO!!!!!! so this calculation is inherently flawed and needs to be updated. what im noticing now is:
+#   players own worth is counted
+#   the percentage of points  might be too strong- like if 2nd gets 95% is that right? maybe a bonus is needed 
+#   for top 8??? 
+#   maybe thresholds are in order like 1st gets 100%. 2nd gets 95%. 3rd gets 90 etc. defined up to 33rd
+#   """
+  
+#   if not placement:
+#     print("error: NO PLACEMENT FOUND for a player",tourneyObj.officialName, tourneyObj.placementDict)
+#     playerPts = 0
+#   else:
+
+#     # NOTE this was my original percentage calculation- based off of total entrants and placement
+#     # perc = ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants)
+#     """
+#     """
+#     placement = int(placement)
+#     # NOTE this is my fixed percentage model- may want to adjust-- MY NEW PERCENTILE MODEL COULD DO IT!!!
+#     # its much less arbitrary and scales
+    
+#     percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
+
+#     percentileAbove = 100 - percentile
+    
+#     stackedThreshold = tourneyObj.stackedRatio * 100
+
+  
+#     beatThreshold = False
+#     if stackedThreshold > percentileAbove:
+#       beatThreshold = True
+#       #print(tourneyObj.TName, stackedThreshold, percentileAbove, placement)
+
+#     perc = 0
+#     if tourneyObj.totalEntrants >= 8:
+#       if placement == 1:
+#         perc = 1.00
+#       elif placement == 2:
+#         perc = .93
+#       elif placement == 3:
+#         perc = .86
+
+#       if tourneyObj.totalEntrants >= 12 or beatThreshold:
+#         if placement == 4:
+#           perc = .79
+    
+#     # TODO i think awarding points to top 3rd of bracket might make most sense??? hmmm idk
+
+#     # award pts to top 6 if more than 18 entrants
+#     if tourneyObj.totalEntrants >= 18 or beatThreshold:
+#       if placement == 5:
+#         perc = .72
+    
+#     # award pts to top 8 if more than 24 entrants
+#     if tourneyObj.totalEntrants >= 24 or beatThreshold:
+#       if placement == 7:
+#         perc = .65
+
+#     # award pts to top 12 if more than 32? or 36... entrants #TODO Decidison
+#     if tourneyObj.totalEntrants >= 36 or beatThreshold:
+#       if placement == 9:
+#         perc = .58
+
+#     # award pts to top 16 if more than 48?? entrants
+#     if tourneyObj.totalEntrants >= 48 or beatThreshold:
+#       if placement == 13:
+#         perc = .51
+
+#     # perc = percentile/100 
+#     # TODO TRY COMPARING PERC AS PERCENITLE VS WHTA I SET ALSO BEAT HRTREHSOLD!!!
+
+#     """
+#     WHAT I LEARNED- percentile only is no good, and no percentile 
+    
+#     means people dont get enough pts?
+#     """
+#     playerPts = perc * tourneyObj.totalScore
+
+#     # playerPts = tourneyObj.totalScore/np.sqrt(placement)
+
+#   return playerPts
