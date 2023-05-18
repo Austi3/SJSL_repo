@@ -23,8 +23,8 @@ class Tourney:
       self.totalScore = 0
       self.stackedRatio = 0
       self.notableEntrants = []
-      self.otherEntrants = []
       self.allEntrants = []
+      self.tier = "N/A"
 
 
     def to_dict(self):
@@ -32,16 +32,15 @@ class Tourney:
             'Hyperlink': self.fullLink,
             'SGGName': self.smashGGlink,
             'TName' : self.TName,
-            'TSeries': self.tseries,
-            'Color': self.color,
-            'Total Entrants': self.totalEntrants,
-
-            'notable entrants': self.notableEntrants,
-            'otherEntrants': self.otherEntrants,
-            'placementDict':self.placementDict,
+            'totalScore': self.totalScore,
+            'tier':self.tier,
             'attendanceScore' : self.attendanceScore, 
             'stackedScore': self.stackedScore,
-            'totalScore': self.totalScore,
+            'Total Entrants': self.totalEntrants,
+            'notable entrants': self.notableEntrants,
+            'placementDict':self.placementDict,
+            'TSeries': self.tseries,
+            'Color': self.color,
             'stackedRatio': self.stackedRatio
         }
 

@@ -3,8 +3,73 @@ from playerClass import *
 import numpy as np
 
 
+def handleSpecialPlayers(tag):
+  """
+  TODO i might want a way to make this more robust or avoid this, but itll work for now
+
+  This is my list of players who have changed their tags. Annoying but i must manually add each time i see new one.
+
+  Returns a formatted player tag with their proper name
+  """
+  tag= tag.replace("~", "") # need this til i get rid of ~~~ formatting
+  if tag.lower() in ['snogi', 'critz but retired', '<3 brisket']:
+    tag = 'Snogi'
+  elif tag.lower() in ['chanman', 'chan', 'poop87', 'funnymoments with ridley']:
+    tag = 'Chanman'
+  elif 'Poop' in tag:
+    print("my name is", tag.lower())
+  elif tag.lower() in ['sauce', 'hotsaucefuego','obmcbob', 'gravy', "brother zoinks"]:
+    tag = 'Sauce'
+  elif tag in ['xavier', 'Xavier']:
+    tag = 'Xavier'
+  elif tag.lower() in ["vince", "sapphire"]:
+    tag = "Vince"
+  elif tag.lower() in ["hunter", "hunterwinthorpe"]:
+    tag = "Hunter"
+  elif tag.lower() in ["pee83", "treestain", "justin rodriguez"]:
+    tag = "Treestain"
+  elif tag.lower() in ["spiro", "tinder god"]:
+    tag = "Spiro"
+  elif tag.lower() in ["jacie", "jesty"]:
+    tag = "Jesty"
+  elif tag.lower() in ["grey", "badfish321"]:
+    tag = "Grey"
+  elif tag.lower() in ["waliu", "dak"]:
+      tag = "dak"
+  elif tag.lower() in ["torrent", "roommate", "harper"]:
+    tag = "torrent"
+  return tag
+
+
 
 def getLeagueTourneyTier(tourneyObj):
+  """
+  This is to be dynamically set in accordance with Sector X tiers.
+
+  ALSO you can change tourneyObj.stotalscore directly here!!! if u want fixed score or to add bonuses or what not idl 
+
+  """
+  if tourneyObj.totalScore >= 80:
+    tier = "S"
+  elif tourneyObj.totalScore >= 70:
+    tier = "A+"
+  elif tourneyObj.totalScore >= 60:
+    tier = "A"
+  elif tourneyObj.totalScore >= 50:
+    tier = "B+"
+  elif tourneyObj.totalScore >= 40:
+    tier = "B"
+  elif tourneyObj.totalScore >= 30:
+    tier = "C"
+  elif tourneyObj.totalScore < 30:
+    tier = "D"
+ 
+  # print("tier for", tourneyObj.TName, tier, tourneyObj.totalScore)
+  return tier
+
+
+
+def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
   """
   This is to be dynamically set in accordance with Sector X tiers.
 

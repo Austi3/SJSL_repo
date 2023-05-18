@@ -10,7 +10,7 @@ seasonName = "Smash League"
 tourneySheetName = "%s Tourneys" % seasonName
 clusterSheetName = '%s Player Clusters'  % seasonName
 playerDFSheet =  "%s Player Data" % seasonName
-
+tourneyDFSheet = "%s Tourney Data" % seasonName
 
  
 def MAIN():
@@ -40,7 +40,11 @@ def MAIN():
     playerDF = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
     
     """TODO make this dynamic"""
-    writePlayerDataFrame(docName, playerDFSheet, playerDF)
+    
+    writeDataFrame(docName, playerDFSheet, playerDF, True)
+ 
+    writeDataFrame(docName, tourneyDFSheet, tourneyDF, False)
+
 
     user_choice, choiceIdx = get_user_choice()
 

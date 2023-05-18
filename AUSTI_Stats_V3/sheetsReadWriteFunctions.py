@@ -42,43 +42,6 @@ smash = pysmashgg.SmashGG(KEY, True)
 
 ################################# Player Functions ####################################################################
 
-def handleSpecialPlayers(tag):
-  """
-  TODO i might want a way to make this more robust or avoid this, but itll work for now
-
-  This is my list of players who have changed their tags. Annoying but i must manually add each time i see new one.
-
-  Returns a formatted player tag with their proper name
-  """
-  tag= tag.replace("~", "") # need this til i get rid of ~~~ formatting
-  if tag.lower() in ['snogi', 'critz but retired', '<3 brisket']:
-    tag = 'Snogi'
-  elif tag.lower() in ['chanman', 'chan', 'poop87', 'funnymoments with ridley']:
-    tag = 'Chanman'
-  elif 'Poop' in tag:
-    print("my name is", tag.lower())
-  elif tag.lower() in ['sauce', 'hotsaucefuego','obmcbob', 'gravy']:
-    tag = 'Sauce'
-  elif tag in ['xavier', 'Xavier']:
-    tag = 'Xavier'
-  elif tag.lower() in ["vince", "sapphire"]:
-    tag = "Vince"
-  elif tag.lower() in ["hunter", "hunterwinthorpe"]:
-    tag = "Hunter"
-  elif tag.lower() in ["pee83", "treestain", "justin rodriguez"]:
-    tag = "Treestain"
-  elif tag.lower() in ["spiro", "tinder god"]:
-    tag = "Spiro"
-  elif tag.lower() in ["jacie", "jesty"]:
-    tag = "Jesty"
-  elif tag.lower() in ["grey", "badfish321"]:
-    tag = "Grey"
-  elif tag.lower() in ["waliu", "dak"]:
-      tag = "dak"
-  elif tag.lower() in ["torrent", "roommate", "harper"]:
-    tag = "torrent"
-  return tag
-
 
 def getPlayerLevels(docName, sheetName, ptValueIncrement):
     """
@@ -358,12 +321,13 @@ def writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, cut
         sheet.update_cells(cell_list)
 
 
-def writePlayerDataFrame(docName, sheetName, playerDF):
+def writeDataFrame(docName, sheetName, df, isPlayerDF):
   sheet = client.open(docName).worksheet(sheetName)
   sheet.clear()
 
-  df = playerDF
-  df = playerDF.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
+  if isPlayerDF:
+    # if its the player dataframe we want to drop the class objects that cant be written
+    df = df.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
 
   header = list(df.columns)
   # insert the header as the first row in the worksheet
