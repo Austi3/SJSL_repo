@@ -1,44 +1,7 @@
 
 from playerClass import *
+from PlayerTags import *
 import numpy as np
-
-
-def handleSpecialPlayers(tag):
-  """
-  TODO i might want a way to make this more robust or avoid this, but itll work for now
-
-  This is my list of players who have changed their tags. Annoying but i must manually add each time i see new one.
-
-  Returns a formatted player tag with their proper name
-  """
-  tag= tag.replace("~", "") # need this til i get rid of ~~~ formatting
-  if tag.lower() in ['snogi', 'critz but retired', '<3 brisket']:
-    tag = 'Snogi'
-  elif tag.lower() in ['chanman', 'chan', 'poop87', 'funnymoments with ridley']:
-    tag = 'Chanman'
-  elif 'Poop' in tag:
-    print("my name is", tag.lower())
-  elif tag.lower() in ['sauce', 'hotsaucefuego','obmcbob', 'gravy', "brother zoinks"]:
-    tag = 'Sauce'
-  elif tag in ['xavier', 'Xavier']:
-    tag = 'Xavier'
-  elif tag.lower() in ["vince", "sapphire"]:
-    tag = "Vince"
-  elif tag.lower() in ["hunter", "hunterwinthorpe"]:
-    tag = "Hunter"
-  elif tag.lower() in ["pee83", "treestain", "justin rodriguez"]:
-    tag = "Treestain"
-  elif tag.lower() in ["spiro", "tinder god", "ap"]:
-    tag = "Spiro"
-  elif tag.lower() in ["jacie", "jesty"]:
-    tag = "Jesty"
-  elif tag.lower() in ["grey", "badfish321"]:
-    tag = "Grey"
-  elif tag.lower() in ["waliu", "dak"]:
-      tag = "dak"
-  elif tag.lower() in ["torrent", "roommate", "harper"]:
-    tag = "torrent"
-  return tag
 
 
 
@@ -99,7 +62,7 @@ def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
   return tier
 
 
-def buildPointPlacementDictionary(pointIncrement, maxPoints):
+def buildPointPlacementDictionary(pointIncrement, maxPlacementBonusPoints):
   """
   If u want to dynamically assign points by placement u can use this
 
@@ -111,7 +74,7 @@ def buildPointPlacementDictionary(pointIncrement, maxPoints):
 
   pointDict = {}
 
-  value = maxPoints
+  value = maxPlacementBonusPoints
   for place in placements:
     pointDict[place] = value
     value -= pointIncrement
@@ -119,7 +82,7 @@ def buildPointPlacementDictionary(pointIncrement, maxPoints):
   return pointDict
 
 
-def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
+def getPlayerEarnedLeagueTourneyPoints(placement, tourneyObj, playerTag, maxPlacementBonusPoints):
   """
   Returns the amount of points for the league the player earned at a given tourney. 
   NOTE: not sure how to use dueling points yet, would need a separate variable to track or soemthing and dont wnat it in this function.
@@ -133,12 +96,11 @@ def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
   percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
 
 
-  earnedWeightedPoints = round((percentile/100) * tourneyObj.totalScore)
+  earnedWeightedPoints = (percentile/100) * tourneyObj.totalScore
 
   myIncrement = 5 
-  maxPoints = 50
   """THIS INCREMENT CAN BE CHANGED"""
-  placementBonusDict = buildPointPlacementDictionary(myIncrement, maxPoints)
+  placementBonusDict = buildPointPlacementDictionary(myIncrement, maxPlacementBonusPoints)
   """
   ZACK! this above is what u can award placement bonus poitns to. we can mess with this as needed as well as these 2 functions
 
@@ -147,37 +109,36 @@ def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
 
   tourneyTier = tourneyObj.tier
 
-  placementPoints = 0
+  placementBonusPoints = 0
   if tourneyTier in ["S"]:
     # award points to top 16
     if placement < 17:
-      placementPoints = placementBonusDict[placement]
+      placementBonusPoints = placementBonusDict[placement]
   elif tourneyTier in ["A+", "A"]:
     # award points bonus to top 12
     if placement < 13:
-      placementPoints = placementBonusDict[placement]
+      placementBonusPoints = placementBonusDict[placement]
 
   elif tourneyTier in ["B+", "B"]:
     # top 8
     if placement < 9:
-      placementPoints = placementBonusDict[placement]
+      placementBonusPoints = placementBonusDict[placement]
   
   elif tourneyTier in ["C"]:
     if placement < 6:
       # top 6
-      placementPoints = placementBonusDict[placement]
+      placementBonusPoints = placementBonusDict[placement]
 
     elif tourneyTier in ["D"]:
       if placement <= 4:
         # top 4
-        placementPoints = placementBonusDict[placement]  
+        placementBonusPoints = placementBonusDict[placement]  
   
-  totalPointsForTourney = earnedWeightedPoints + placementPoints
+  totalPointsForTourney = earnedWeightedPoints + placementBonusPoints
   # totalPointsForTourney = placementPoints
 
-
   # print(playerTag, placement, tourneyTier, earnedWeightedPoints, placementPoints, totalPointsForTourney)
-  return totalPointsForTourney
+  return totalPointsForTourney, earnedWeightedPoints, placementBonusPoints
 
 
                      
@@ -186,7 +147,7 @@ def getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag):
 
 
 
-def get_player_points(player_name, point_dict):
+def get_notable_player_points(player_name, point_dict):
     """
     gets points for notable entrants
     """
@@ -211,7 +172,7 @@ def getTourneyScores(tourneyObj, playerLvlsDict):
 
   for playerTag in tourneyObj.placementDict:
     
-    points, isNotable = get_player_points(playerTag, playerLvlsDict)
+    points, isNotable = get_notable_player_points(playerTag, playerLvlsDict)
     if isNotable:
       tourneyObj.stackedScore += points
       tourneyObj.notableEntrants.append(playerTag)
@@ -228,7 +189,7 @@ def getTourneyScores(tourneyObj, playerLvlsDict):
 
 
 
-def updateAllPlayerData(tourneyObj, playerObjDict):
+def updateAllPlayerData(tourneyObj, playerObjDict, maxPlacementBonusPoints):
 
     for playerTag in tourneyObj.placementDict:
 
@@ -238,7 +199,7 @@ def updateAllPlayerData(tourneyObj, playerObjDict):
       """
       TODO LEAGUE FUNCTION CALL HERE
       """
-      playerPts = getPlayerEarnedLeaguePoints(placement, tourneyObj, playerTag)
+      totalPointsForTourney, earnedWeightedPoints, placementBonusPoints = getPlayerEarnedLeagueTourneyPoints(placement, tourneyObj, playerTag, maxPlacementBonusPoints)
 
 
       if playerTag not in playerObjDict:
@@ -248,43 +209,38 @@ def updateAllPlayerData(tourneyObj, playerObjDict):
       # TODO this is new test it
       playerObjDict[playerTag].tourneysEntered.append(tourneyObj)
       playerObjDict[playerTag].numTourneysEntered += 1
-      playerObjDict[playerTag].earnedTourneyPts += playerPts
-      playerObjDict[playerTag].totalPossibleTourneyPts += tourneyObj.totalScore
-      playerObjDict[playerTag].tourneyPtRatio = 100*(playerObjDict[playerTag].earnedTourneyPts/playerObjDict[playerTag].totalPossibleTourneyPts)
+      playerObjDict[playerTag].earnedTourneyPts += totalPointsForTourney
+      playerObjDict[playerTag].earnedWeightedPoints += earnedWeightedPoints
+      playerObjDict[playerTag].placementBonusPoints += placementBonusPoints
+
+      playerObjDict[playerTag].totalPossibleWeightedTourneyPts += tourneyObj.totalScore
+      playerObjDict[playerTag].tourneyPtRatio = 100*(playerObjDict[playerTag].earnedTourneyPts/(playerObjDict[playerTag].totalPossibleWeightedTourneyPts + (playerObjDict[playerTag].numTourneysEntered*maxPlacementBonusPoints)))
 
       percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
 
-      #THIS NEXT PART IS WRONG AND OUTDATED!!! ((tourneyObj.totalEntrants - int(placement) + 1)/tourneyObj.totalEntrants) 
-      """
-      todo todo TODO TODO
-      NEED TO DOUBLE CHECK THIS???
-      """
-
-
-      #WHY DID I MAKE THIS CONFUSING AND THE SAME NAME??? IS IT RIGHT????
       placementPercentilePts = percentile 
 
       weightedPercentilePts = (percentile/100) * tourneyObj.totalScore
       # TODO TESTING !!!!! recompute avg each time
 
       playerObjDict[playerTag].weightedPercentilePts += weightedPercentilePts
-      playerObjDict[playerTag].weightedPercentileAvg = (playerObjDict[playerTag].weightedPercentilePts /playerObjDict[playerTag].totalPossibleTourneyPts) * 100
+      playerObjDict[playerTag].weightedPercentileAvg = (playerObjDict[playerTag].weightedPercentilePts /playerObjDict[playerTag].totalPossibleWeightedTourneyPts) * 100
 
 
       playerObjDict[playerTag].percentilePts += placementPercentilePts
       playerObjDict[playerTag].avgPercentile = (playerObjDict[playerTag].percentilePts) / (playerObjDict[playerTag].numTourneysEntered)
       
 
-      playerObjDict[playerTag].tourneyResultsDict[tourneyObj.TName] = PlayerTourneyResults(tourneyObj, placement, playerPts, placementPercentilePts, weightedPercentilePts)
+      playerObjDict[playerTag].tourneyResultsDict[tourneyObj.TName] = PlayerTourneyResults(tourneyObj, placement, totalPointsForTourney, placementPercentilePts, weightedPercentilePts)
 
- 
-def getPlayerTopResults(playerObjDict):
-  for playerKey in playerObjDict:
-    for tourneyKey in playerObjDict[playerKey].tourneyResultsDict:
-      tourney = playerObjDict[playerKey].tourneyResultsDict[tourneyKey]
-      if tourney.tourneyPts > 0:
-        pass
-        # print(tourney.tourneyName, tourney.tourneyPlacement, tourney.tourneyPts, playerKey)
+# TODO delete?
+# def getPlayerTopResults(playerObjDict):
+#   for playerKey in playerObjDict:
+#     for tourneyKey in playerObjDict[playerKey].tourneyResultsDict:
+#       tourney = playerObjDict[playerKey].tourneyResultsDict[tourneyKey]
+#       if tourney.tourneyPts > 0:
+#         pass
+#         # print(tourney.tourneyName, tourney.tourneyPlacement, tourney.tourneyPts, playerKey)
       
 
 def calculatePercentile(placement, numEntrants):
@@ -364,31 +320,6 @@ def computePlayersTied(placement, numEntrants):
 
 calculatePercentile(3,40)
 
-def getPlayerColor(player):
-    if player.lower() in []:
-        c = "lawngreen"
-    elif player.lower() in ["spiro", "sauce", "hoodinii","charm", "grey"]:
-      c = "limegreen"
-    elif player.lower() in ["xavier", "vince", "secret",  "aryeh", "hunterwinthorpe"]:
-        c = "red"
-    elif player.lower() in ["noodl", "chanman", "austi", "spectro"]:
-        c = "yellow"
-    elif player.lower() in ["snogi", "consent is badass", "treestain", "a9", "azazel"]:
-        c = "orange"
-    elif player.lower() in ["boosk", "zeusie", "jesty", "ham burrito"]:
-        c = "magenta"
-    elif player.lower() in ["alo!", "wheezy", "sly", "blase"]:
-        c = "darkviolet"
-    elif player.lower() in ["critz", "chocolatejesus", "dyla", "crest", "kurama"]:
-        c = "mediumblue"
-    else:
-        if len(player.lower()) % 3 == 0:
-          c = "dodgerblue"
-        elif len(player.lower()) % 3 == 1:
-          c = "hotpink"
-        elif len(player.lower()) % 3 == 2:
-          c = "cyan"
-    return c
 
 
 # this was my original and official tourney point calculator

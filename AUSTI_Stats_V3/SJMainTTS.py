@@ -1,7 +1,7 @@
 from sheetsReadWriteFunctions import *
 from plotFunctions import *
 from Calculations import *
-
+from SJSL_Excel_ReadWriter import *
  
 docName = "MY SJSL Data Sheet"
 
@@ -30,20 +30,23 @@ def MAIN():
 
 
     playerObjDict = {}
-
+    maxPlacementBonusPoints = 50
     for tourney in tourneyObjDict:
         getTourneyScores(tourneyObjDict[tourney], playerLvlDict)
-        updateAllPlayerData(tourneyObjDict[tourney], playerObjDict) 
+        updateAllPlayerData(tourneyObjDict[tourney], playerObjDict, maxPlacementBonusPoints)
 
+    """ LEAGUE ONLY!!!"""
+    getWriteLeagueLeaderboard(playerObjDict)
 
     tourneyDF = pd.DataFrame.from_records([tourneyObjDict[tournName].to_dict() for tournName in tourneyObjDict])
     playerDF = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
     
     """TODO make this dynamic"""
     
-    writeDataFrame(docName, playerDFSheet, playerDF, True)
+    dropColumnsList = ['Tourneys Attended Object List', 'tourneyResultsDict']
+    writeDataFrame(docName, playerDFSheet, playerDF, dropColumnsList)
  
-    writeDataFrame(docName, tourneyDFSheet, tourneyDF, False)
+    writeDataFrame(docName, tourneyDFSheet, tourneyDF)
 
 
     user_choice, choiceIdx = get_user_choice()
@@ -54,12 +57,12 @@ def MAIN():
     # savePlot = False
     for plotItem in user_choice:
 
-        if plotItem in ["Earned League Points", "Max Points Possible", "Number of Tourneys Entered"]:
+        if plotItem in ["Total League Points", "Max Points Possible", "Number of Tourneys Entered"]:
             minTourneys = 0
         else: 
             minTourneys = 5
 
-        customPlotName = "1.5 per tier, 50 pts for first, LESS TOURNEY TEST"
+        customPlotName = "SJSL Points Leaderboard"
         plotPlayerData(playerDF, plotItem, seasonName, minTourneys, numPlayers, showPlot, customPlotName)
 
 

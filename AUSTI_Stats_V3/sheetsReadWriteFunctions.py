@@ -321,14 +321,13 @@ def writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, cut
         sheet.update_cells(cell_list)
 
 
-def writeDataFrame(docName, sheetName, df, isPlayerDF):
+def writeDataFrame(docName, sheetName, df, dropColumsList=[]):
+  
   sheet = client.open(docName).worksheet(sheetName)
   sheet.clear()
   
-  if isPlayerDF:
-    # if its the player dataframe we want to drop the class objects that cant be written
-    df = df.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
 
+  df = df.drop(columns=dropColumsList)
 
   for i, col in enumerate(df.columns):
       col_list = df[col].tolist()
@@ -349,6 +348,9 @@ def writeDataFrame(docName, sheetName, df, isPlayerDF):
             print(f"Column {col} contains non-serializable data and was skipped.")
 
 
-  header = list(df.columns)
-  # insert the header as the first row in the worksheet
-  sheet.insert_row(header, index=1)
+  if "SJSL Leaderboard" in sheetName:
+    pass
+  else:
+    header = list(df.columns)
+    # insert the header as the first row in the worksheet
+    sheet.insert_row(header, index=1)

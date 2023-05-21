@@ -9,7 +9,7 @@ import scipy.stats as stats
 import os
 
 # these are the options for what can be plotted in the player graphs
-playerGraphOptions = ["Earned League Points", "Max Points Possible", "Earned Point Ratio", "Number of Tourneys Entered", 
+playerGraphOptions = ["Total League Points", "Max Points Possible", "Earned Point Ratio", "Number of Tourneys Entered", 
         "Placement Percentile Average", "Weighted Placement Percentile Average", "Plot All"]
 
 def get_user_choice():
@@ -38,7 +38,7 @@ def getAbbreviation(itemKey):
     """
 
     pos = playerGraphOptions.index(itemKey)
-    abbreviations = ["ETP", "Max Points Possible", "EPR", "Tourneys Attended", "PPA", "WPPA"]
+    abbreviations = ["ETP", "Max Points Possible", "EPR", "Tourneys Entered", "PPA", "WPPA"]
     return abbreviations [pos]
 
 
@@ -50,14 +50,16 @@ def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPla
     playerDataFrame = playerDataFrame.round(2)
 
 
-    ax = playerDataFrame.plot.bar('tag',itemKey, figsize=(15, 7) , color = playerDataFrame['color'] )
+    ax = playerDataFrame.plot.bar('Player',itemKey, figsize=(15, 7) , color = playerDataFrame['color'] )
     for container in ax.containers:
         ax.bar_label(container)
 
-    # add a text box with a note
-    plt.text(0.98, 0.98, f"*Min Tourneys Required: {minReqTourneys}", ha='right', va='top', transform=plt.gca().transAxes,
-         bbox={'boxstyle': 'round,pad=0,rounding_size=0.2', 'facecolor': 'white', 'edgecolor': 'none'})
+    # # add a text box with a note
+    # plt.text(0.98, 0.98, f"*Min Tourneys Required: {minReqTourneys}", ha='right', va='top', transform=plt.gca().transAxes,
+    #      bbox={'boxstyle': 'round,pad=0,rounding_size=0.2', 'facecolor': 'white', 'edgecolor': 'none'})
 
+    
+    ax.set_xticklabels([f'({i+1})  {name}' for i, name in enumerate(playerDataFrame['Player'])])
     plt.xticks(rotation=75)
     plt.ylabel(itemKey)
 
@@ -78,62 +80,6 @@ def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPla
 
     if showPlot:
         plt.show()
-
-
-# def plotPlayerDataFrame(playerDataFrame,  playerObjDict, itemKey, yAxisLabel, plotTitle, seasonStr, min5Events= True, roundPlace = 2):
-
-#     """ TODO fix or move this but this is currently how i filter out players with less than 5 tourneys"""
-#     if min5Events:
-#         tempDict = {}
-#         for player in playerObjDict:
-#             if len(playerObjDict[player].tourneysEntered) >= 5:
-#                 tempDict[player] = playerObjDict[player]
-
-#         playerObjDict = tempDict 
-
-#         #i redo the player dataframe here to filter by people with >= 5 tourneys. 
-#         playerDataFrame = pd.DataFrame.from_records([playerObjDict[playerTag].to_dict() for playerTag in playerObjDict])
-
-
-#     """
-#     TODO plot normal distribution
-#     df_mean = np.mean(playerDataFrame[plotItem])
-#     df_std = np.std(playerDataFrame[plotItem])
-    
-#     # Calculating probability density function (PDF)
-#     pdf = stats.norm.pdf(playerDataFrame[plotItem].sort_values(), df_mean, df_std)
-   
-
-#     plt.bar(playerDataFrame[plotItem].sort_values(), pdf)[0:30]
-#     plt.show()
-#      """
-
-#     playerDataFrame = playerDataFrame.sort_values(by=[itemKey], ascending=False)[0:30] # plot top 30
-#     playerDataFrame = playerDataFrame.round(roundPlace)
-
-#     # fig, ax = plt.figure(figsize=(10, 7))
-
-#     # plt.bar(playerDataFrame['tag'], playerDataFrame[plotItem])
-
-
-#     ax = playerDataFrame.plot.bar('tag',itemKey, figsize=(15, 7) , color = playerDataFrame['color'] )
-#     for container in ax.containers:
-#         ax.bar_label(container)
-
-#     plt.xticks(rotation=75)
-#     plt.xlabel("Player")
-#     plt.ylabel(yAxisLabel)
-#     plt.title(plotTitle)
-#     plt.tight_layout()
-#     ax.get_legend().remove()
-
-#     directory_name = './plotsOutput/playerResultsDir/' + seasonStr
-#     if not os.path.exists(directory_name):
-#         os.mkdir(directory_name)
-
-#     plt.savefig(directory_name + plotTitle.strip() + ".png" )
-
-#     # plt.show()
 
 
         

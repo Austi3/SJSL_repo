@@ -8,8 +8,7 @@ class Player:
     self.tourneyResultsDict = {} 
     """ NOTE: key is tourneyname, value is an object of tournament information for the tourney entered by player"""
     self.numTourneysEntered = 0
-    self.earnedTourneyPts = 0
-    self.totalPossibleTourneyPts = 0
+    self.totalPossibleWeightedTourneyPts = 0
 
     self.bestTourneyResults = {} # will take top 7 or top 7+ and drop lowest 
 
@@ -22,43 +21,31 @@ class Player:
     self.tourneyPtRatio = 0 #TODO this is no longer a great metric since i made tourney poitns aharder to do- better metric is
     #placement ratio- what they got out of what was possible
 
-  def printPlayerInfo(self):
-    print("****************************************")
-    print("tag: ",self.tag )
-    print("tourneys entered: ", len(self.tourneysEntered))
-    print()
-    print("total points earned by my tiers: ", self.earnedTourneyPts)
-    print("total possible tourney pts: ", self.totalPossibleTourneyPts)
-    print("tourney pt ratio: ", np.round(self.tourneyPtRatio,2))
-    print()
+    # LEAGUE DATA
+    self.earnedTourneyPts = 0 # ETP: total points earned from tourneys (weighted + placementBonus)
+    self.earnedWeightedPoints = 0
+    self.placementBonusPoints = 0
+    self.earnedDuelPoints = 0
+    self.earnedBountyPoints = 0
+    self.totalLeaguePoints = 0 # combined ETP + DP + BP
 
-    print("avg place percentile: ", np.round(self.avgPercentile,2))
-    print("weighted percentile points: ", np.round(self.weightedPercentilePts,2))
-    print("weighted percentile avg (which = pt ratio) ", np.round(self.weightedPercentileAvg,2))
-
-  # TODO this doesnt work yet
-  # def remove_bottom_20_percent(self, d: dict, attr_name: str) -> dict:
-  #     n = len(d)
-  #     if n <= 7:
-  #         return d
-  #     sorted_dict = sorted(d.items(), key=lambda x: getattr(x[1], attr_name))
-  #     bottom_20_percent = math.ceil(n * 0.2)
-  #     if bottom_20_percent == 0:
-  #         return d
-  #     else:
-  #         bottom_keys = [key for key, value in sorted_dict[:bottom_20_percent]]
-  #         for key in bottom_keys:
-  #             del d[key]
-  #         return d
 
   def to_dict(self):
       return {
-          'tag': self.tag,
-          'Tourneys Attended' : self.tourneysEntered,
-          'Earned League Points' : self.earnedTourneyPts,
-          'Max Points Possible' : self.totalPossibleTourneyPts,
-          'Earned Point Ratio' : self.tourneyPtRatio,
+          'Player': self.tag,
+          'Total League Points' : self.totalLeaguePoints,
           'Number of Tourneys Entered' : self.numTourneysEntered,
+
+          'Earned Tourney Points' : self.earnedTourneyPts,
+          'Earned Weighted Points': self.earnedWeightedPoints,
+          'Earned Placement Bonus Points': self.placementBonusPoints,
+          'Earned Duel Points' : self.earnedDuelPoints,
+          'Earned Bounty Points' : self.earnedBountyPoints,
+
+
+          'Tourneys Attended Object List' : self.tourneysEntered,
+          'Max Points Possible' : self.totalPossibleWeightedTourneyPts,
+          'Earned Point Ratio' : self.tourneyPtRatio,
           'Placement Percentile Average' : self.avgPercentile,
           'Weighted Points' : self.weightedPercentilePts,
           'Weighted Placement Percentile Average' : self.weightedPercentileAvg,
