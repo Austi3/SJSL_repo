@@ -3,9 +3,9 @@ from plotFunctions import *
 from Calculations import *
 
  
-docName = "Sector X Smash League Data"
+docName = "MY SJSL Data Sheet"
 
-seasonName = "Smash League"
+seasonName = "SJSL"
 
 tourneySheetName = "%s Tourneys" % seasonName
 clusterSheetName = '%s Player Clusters'  % seasonName
@@ -59,7 +59,8 @@ def MAIN():
         else: 
             minTourneys = 5
 
-        plotPlayerData(playerDF, plotItem, seasonName, minTourneys, numPlayers, showPlot)
+        customPlotName = "1.5 per tier, 50 pts for first, LESS TOURNEY TEST"
+        plotPlayerData(playerDF, plotItem, seasonName, minTourneys, numPlayers, showPlot, customPlotName)
 
 
 

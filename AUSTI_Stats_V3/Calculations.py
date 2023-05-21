@@ -28,7 +28,7 @@ def handleSpecialPlayers(tag):
     tag = "Hunter"
   elif tag.lower() in ["pee83", "treestain", "justin rodriguez"]:
     tag = "Treestain"
-  elif tag.lower() in ["spiro", "tinder god"]:
+  elif tag.lower() in ["spiro", "tinder god", "ap"]:
     tag = "Spiro"
   elif tag.lower() in ["jacie", "jesty"]:
     tag = "Jesty"
@@ -222,7 +222,7 @@ def getTourneyScores(tourneyObj, playerLvlsDict):
     # average or soemthing
 
   tourneyObj.tier = getLeagueTourneyTier(tourneyObj)
-  print(tourneyObj.TName, tourneyObj.tier, "Tier")
+  # print(tourneyObj.TName, tourneyObj.tier, "Tier")
 
 
 
@@ -251,7 +251,6 @@ def updateAllPlayerData(tourneyObj, playerObjDict):
       playerObjDict[playerTag].earnedTourneyPts += playerPts
       playerObjDict[playerTag].totalPossibleTourneyPts += tourneyObj.totalScore
       playerObjDict[playerTag].tourneyPtRatio = 100*(playerObjDict[playerTag].earnedTourneyPts/playerObjDict[playerTag].totalPossibleTourneyPts)
-      
 
       percentile = calculatePercentile(int(placement), tourneyObj.totalEntrants)
 

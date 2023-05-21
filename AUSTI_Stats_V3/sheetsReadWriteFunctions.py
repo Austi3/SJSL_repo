@@ -324,36 +324,31 @@ def writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, cut
 def writeDataFrame(docName, sheetName, df, isPlayerDF):
   sheet = client.open(docName).worksheet(sheetName)
   sheet.clear()
-
+  
   if isPlayerDF:
     # if its the player dataframe we want to drop the class objects that cant be written
     df = df.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
 
-  header = list(df.columns)
-  # insert the header as the first row in the worksheet
-  sheet.insert_row(header, index=1)
 
   for i, col in enumerate(df.columns):
       col_list = df[col].tolist()
       # convert non-serializable values to string before writing to sheet
       col_list = [json.dumps(x) if not isinstance(x, (int, float)) else x for x in col_list]
       # update cells
-      cell_list = sheet.range(2, i+1, len(col_list), i+1)
+      cell_list = sheet.range(1, i+1, len(col_list), i+1)
       for cell, value in zip(cell_list, col_list):
           if isinstance(value, (int, float)):
             cell.value = round(value,2)
+          elif isinstance(value, str):
+            cell.value = value.strip('"')
           else:
              cell.value = value
       try:
         sheet.update_cells(cell_list)
       except TypeError:
             print(f"Column {col} contains non-serializable data and was skipped.")
-    # print(playerDF.iloc[1])
-
-    # copyPlayerDF = playerDF
-
-    # copyPlayerDF = copyPlayerDF.drop(columns=['Tourneys Attended', 'tourneyResultsDict'])
-
-    # print(copyPlayerDF)
 
 
+  header = list(df.columns)
+  # insert the header as the first row in the worksheet
+  sheet.insert_row(header, index=1)

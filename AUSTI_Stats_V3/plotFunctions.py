@@ -42,7 +42,7 @@ def getAbbreviation(itemKey):
     return abbreviations [pos]
 
 
-def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPlayersPlotted=30, showPlot=False):
+def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPlayersPlotted=30, showPlot=False, customPlotName = ""):
     # filter out players who havent met attendance requirement
     playerDataFrame = playerDataFrame[playerDataFrame['Number of Tourneys Entered'] >= minReqTourneys]
 
@@ -62,7 +62,10 @@ def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPla
     plt.ylabel(itemKey)
 
     abbr = getAbbreviation(itemKey)
-    plotTitle = f"Top {numPlayersPlotted} Players Ranked by {abbr} ({prSeason})"
+    if customPlotName:
+        plotTitle = customPlotName
+    else:
+        plotTitle = f"Top {numPlayersPlotted} Players Ranked by {abbr} ({prSeason})"
     plt.title(plotTitle)
     plt.tight_layout()
     ax.get_legend().remove()
