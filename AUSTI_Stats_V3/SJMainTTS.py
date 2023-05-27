@@ -49,27 +49,27 @@ def MAIN():
     writeDataFrame(docName, tourneyDFSheet, tourneyDF)
 
 
-    user_choice, choiceIdx = get_user_choice()
-
-
-    showPlot = True
-    numPlayers = 25
+    # user_choice, choiceIdx = get_user_choice()
+    # showPlot = True
+    # numPlayers = 30
     # savePlot = False
-    for plotItem in user_choice:
+    # for plotItem in user_choice:
 
-        if plotItem in ["Total League Points", "Max Points Possible", "Number of Tourneys Entered"]:
-            minTourneys = 0
-        else: 
-            minTourneys = 5
+    #     if plotItem in ["Total League Points", "Max Points Possible", "Number of Tourneys Entered"]:
+    #         minTourneys = 0
+    #     else: 
+    #         minTourneys = 5
 
-        customPlotName = "SJSL Points Leaderboard"
-        plotPlayerData(playerDF, plotItem, seasonName, minTourneys, numPlayers, showPlot, customPlotName)
+    customPlotName = "SJSL Points Leaderboard"
+    showPlot = True
+    numPlayers = 30
+    minTourneys = 0
+    plotPlayerData(playerDF, "Total League Points", seasonName, minTourneys, numPlayers, showPlot, customPlotName)
 
-
+    plotTourneyDataFrame(tourneyDF, 'totalScore', "Tourney Point Value (TPV)", 'SJ Tourneys by Tourney Point Value (%s Season)' % seasonName, seasonName)
 
     # plotTourneyDataFrame(tourneyDF, 'stackedScore', "Stacked Points", 'SJ Tourney Stacked Points (%s Season)' % seasonName, seasonStr)
     # plotTourneyDataFrame(tourneyDF, 'Total Entrants', "Entrant Count",  'SJ Tourney Attendance (%s Season)' % seasonName, seasonStr)
-    plotTourneyDataFrame(tourneyDF, 'totalScore', "Tourney Point Value (TPV)", 'SJ Tourneys by Tourney Point Value (%s Season)' % seasonName, seasonName)
     # plotTourneyDataFrame(tourneyDF, 'stackedRatio', "Stacked Player Index (SPI)", 'SJ Tourneys by Stacked Player Index (%s Season)' % seasonName, seasonStr)
 
 

@@ -72,7 +72,7 @@ def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPla
     plt.tight_layout()
     ax.get_legend().remove()
 
-    directory_name = './plotsOutput/playerResultsDir/' + prSeason + '/'
+    directory_name = '../plotsOutput/' + prSeason + '/'
     if not os.path.exists(directory_name):
         os.mkdir(directory_name)
 
@@ -95,9 +95,11 @@ def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName, seasonStr):
   for container in ax.containers:
     ax.bar_label(container)
   
-  plt.xlabel("Tournament")
+  labels = [f"({tier}) {tournament}" for tier, tournament in zip(tourneyDF['Tier'], tourneyDF['TName'])]
+  ax.set_xticklabels(labels)
 
-  plt.xticks(rotation=80)
+
+  plt.xticks(rotation=75)
 
   botbPatch = mpatches.Patch(color='red', label='Battle Over The Bridge')
   catPatch = mpatches.Patch(color='blue', label='Catastrophe')
@@ -114,11 +116,11 @@ def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName, seasonStr):
 #   plt.grid( axis ='y')
   plt.tight_layout()
 
-  directory_name = './plotsOutput/tourneyResultsDir/' + seasonStr
+  directory_name = '../plotsOutput/' + seasonStr + '/'
   if not os.path.exists(directory_name):
       os.mkdir(directory_name)
 
   plt.savefig(directory_name +plotName.strip() + ".png" )
 
-  # plt.show()
+  plt.show()
 

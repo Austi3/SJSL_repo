@@ -348,9 +348,9 @@ def writeDataFrame(docName, sheetName, df, dropColumsList=[]):
             print(f"Column {col} contains non-serializable data and was skipped.")
 
 
-  if "SJSL Leaderboard" in sheetName:
-    pass
-  else:
-    header = list(df.columns)
-    # insert the header as the first row in the worksheet
-    sheet.insert_row(header, index=1)
+  today = datetime.date.today().strftime('%Y-%m-%d')
+  message = 'Last updated: ' + today
+
+  header = list(df.columns) + ["", message]
+  # insert the header as the first row in the worksheet
+  sheet.insert_row(header, index=1)

@@ -33,7 +33,7 @@ class Tourney:
             'SGGName': self.smashGGlink,
             'TName' : self.TName,
             'totalScore': self.totalScore,
-            'tier':self.tier,
+            'Tier':self.tier,
             'attendanceScore' : self.attendanceScore, 
             'stackedScore': self.stackedScore,
             'Total Entrants': self.totalEntrants,
