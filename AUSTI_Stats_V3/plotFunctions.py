@@ -106,7 +106,7 @@ def plotTourneyDataFrame(tourneyDF, plotItem, yAxisLabel, plotName, seasonStr):
   hopsPatch = mpatches.Patch(color='orange', label='Hops N Stocks')
   rownPatch = mpatches.Patch(color='gold', label='RU Smashin')
   ptbPatch = mpatches.Patch(color='hotpink', label='Pop The Bubble')
-  othrPatch = mpatches.Patch(color='lime', label='Other')
+  othrPatch = mpatches.Patch(color='limegreen', label='Other')
 
   plt.legend(handles=[botbPatch, catPatch, hopsPatch, ptbPatch, rownPatch, othrPatch])
 

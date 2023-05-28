@@ -189,7 +189,6 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
         # add a value to the "new_column" column of the row with index 0
         df.loc[index, 'Tourney SmashGG ID'] = smashGGTourneyName
         df.loc[index, 'Tourney Name'] = tournName
-        df.loc[index, 'Attendance'] = tournAttendance
         df.loc[index, 'Date'] = tournDate
         df.loc[index, 'Tourney Series'] = tournSeries
         df.loc[index, 'Color'] = color
@@ -221,6 +220,8 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
             realTag = handleSpecialPlayers(name)
             tournResultsDict[realTag] = placement
     
+        df.loc[index, 'Attendance'] = len(resultsList)#NOTE: this prevents side bracket entrants
+
         result_str = json.dumps(tournResultsDict)
         df.loc[index, 'Results'] = result_str
 
