@@ -210,6 +210,7 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
         for playerDataResult in resultsList:
 
             name = playerDataResult['tag'].split('| ')[-1]
+
             placement = playerDataResult['finalPlacement']
 
             # TODO i technically could get player info directly whyile im here. try this later?

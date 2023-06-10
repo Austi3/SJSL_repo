@@ -53,9 +53,9 @@ def calculatePlayerTourneyPts(placement, tourneyObj, playerTag):
     tier = "B+"
   elif tourneyObj.totalScore >= 40:
     tier = "B"
-  elif tourneyObj.totalScore >= 30:
+  elif tourneyObj.totalScore >= 25:
     tier = "C"
-  elif tourneyObj.totalScore < 30:
+  elif tourneyObj.totalScore < 25:
     tier = "D"
 
   # print("tier for", tourneyObj.TName, tier, tourneyObj.totalScore)
@@ -152,7 +152,7 @@ def get_notable_player_points(player_name, point_dict):
     gets points for notable entrants
     """
     for points, players in point_dict.items():
-      if player_name in players:
+      if handleSpecialPlayers(player_name) in players:
         return float(points), True
         
     return 0, False
@@ -192,8 +192,8 @@ def getTourneyScores(tourneyObj, playerLvlsDict):
 def updateAllPlayerData(tourneyObj, playerObjDict, maxPlacementBonusPoints):
 
     for playerTag in tourneyObj.placementDict:
-
       placement = tourneyObj.placementDict[playerTag]
+      playerTag = handleSpecialPlayers(playerTag)#TODO REMOVE???
 
       #playerPts = calculatePlayerTourneyPts(placement, tourneyObj, playerTag)
       """
@@ -225,6 +225,8 @@ def updateAllPlayerData(tourneyObj, playerObjDict, maxPlacementBonusPoints):
 
       playerObjDict[playerTag].weightedPercentilePts += weightedPercentilePts
       playerObjDict[playerTag].weightedPercentileAvg = (playerObjDict[playerTag].weightedPercentilePts /playerObjDict[playerTag].totalPossibleWeightedTourneyPts) * 100
+      
+      playerObjDict[playerTag].avgPointsPerTourney = playerObjDict[playerTag].earnedTourneyPts / playerObjDict[playerTag].numTourneysEntered
 
 
       playerObjDict[playerTag].percentilePts += placementPercentilePts

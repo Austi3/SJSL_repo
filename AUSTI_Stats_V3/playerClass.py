@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from PlayerTags import *
 
 class Player:
   def __init__(self, tag, color):
@@ -28,6 +29,8 @@ class Player:
     self.earnedDuelPoints = 0
     self.earnedBountyPoints = 0
     self.totalLeaguePoints = 0 # combined ETP + DP + BP
+    self.avgPointsPerTourney = 0
+    self.isRegistered = "no"
 
 
   def to_dict(self):
@@ -41,6 +44,8 @@ class Player:
           'Earned Placement Bonus Points': self.placementBonusPoints,
           'Earned Duel Points' : self.earnedDuelPoints,
           'Earned Bounty Points' : self.earnedBountyPoints,
+          'Avg Points Per Tourney': self.avgPointsPerTourney,
+          'Registered': self.isRegistered,
 
 
           'Tourneys Attended Object List' : self.tourneysEntered,
