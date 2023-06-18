@@ -36,10 +36,13 @@ def getAbbreviation(itemKey):
     """
     Returns the abbreviation of the metric I used
     """
-
-    pos = playerGraphOptions.index(itemKey)
-    abbreviations = ["ETP", "Max Points Possible", "EPR", "Tourneys Entered", "PPA", "WPPA"]
-    return abbreviations [pos]
+    if itemKey in playerGraphOptions:
+        pos = playerGraphOptions.index(itemKey)
+        
+        abbreviations = ["ETP", "Max Points Possible", "EPR", "Tourneys Entered", "PPA", "WPPA"]
+        return abbreviations [pos]
+    else:
+        return itemKey
 
 
 def plotPlayerData(playerDataFrame, itemKey, prSeason,  minReqTourneys=5, numPlayersPlotted=30, showPlot=False, customPlotName = ""):

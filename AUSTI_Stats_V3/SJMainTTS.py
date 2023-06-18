@@ -66,6 +66,9 @@ def MAIN():
     minTourneys = 0
     plotPlayerData(playerDF, "Total League Points", seasonName, minTourneys, numPlayers, showPlot, customPlotName)
 
+    plotPlayerData(playerDF, "Avg Points Per Tourney", seasonName, minTourneys, numPlayers, showPlot)
+
+
     plotTourneyDataFrame(tourneyDF, 'totalScore', "Tourney Point Value (TPV)", 'SJ Tourneys by Tourney Point Value (%s Season)' % seasonName, seasonName)
 
     # plotTourneyDataFrame(tourneyDF, 'stackedScore', "Stacked Points", 'SJ Tourney Stacked Points (%s Season)' % seasonName, seasonStr)
