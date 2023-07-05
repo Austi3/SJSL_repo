@@ -7,6 +7,7 @@ def handleSpecialPlayers(tag):
   Returns a formatted player tag with their proper name
   """
   tag= tag.replace("~", "") # need this til i get rid of ~~~ formatting
+  tap=tag.strip() #remove trailing spaces
 
   if tag.lower() in ['snogi', 'critz but retired', '<3 brisket']:
     tag = 'Snogi'
@@ -32,13 +33,16 @@ def handleSpecialPlayers(tag):
     tag = "Grey"
   elif tag.lower() in ["waliu", "dak"]:
       tag = "dak"
+  elif tag.lower() in ["taman", "lotion"]:
+      tag = "Taman"
+  elif tag.lower() in ["freege", "snogy"]: #TODO PUT ON SJSL
+      tag = "Freege"
   elif tag.lower() in ["torrent", "roommate", "harper"]:
     tag = "torrent"
   elif tag.lower() in ["blahaj fan", "organic"]:
      tag = "orGanic"
 
   return tag
-
 
 
 

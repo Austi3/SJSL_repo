@@ -6,6 +6,7 @@ import pandas as pd
 from enum import Enum
 import gspread
 from gspread_dataframe import set_with_dataframe
+import time
 
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
@@ -316,6 +317,7 @@ def writePlayerLevelClustersPPA(docName, tourneySheetName, clusterSheetName, cut
     for i, (team, names) in enumerate(players.items()):
         # Set the column header to the team name
         sheet.update_cell(1, i+1, team)
+        time.sleep(1)
         # Write the player names to the column
         cell_list = sheet.range(2, i+1, len(names)+1, i+1)
         for cell, name in zip(cell_list, names):
