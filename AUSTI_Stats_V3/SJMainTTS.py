@@ -14,7 +14,7 @@ tourneyDFSheet = "%s Tourney Data" % seasonName
 
  
 def MAIN():
-    WriteUpdateTourneyDataSheet(docName, tourneySheetName)
+    WriteUpdateTourneyDataSheet(docName, tourneySheetName, "SJSL Official Data", "Tourney URL List")
 
     tourneyObjDict = getTourneyObjDict(docName, tourneySheetName)
 

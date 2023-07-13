@@ -137,7 +137,12 @@ def getTourneyObjDict(docName, sheetName):
 
     return tourneyObjDict
 
-def WriteUpdateTourneyDataSheet(docName, sheetName):
+# def getWriteURLs(officialSJSLsheet):
+#     # Open the worksheet and get all the data as a list of lists
+#     sheet = client.open(docName).worksheet(sheetName)
+#     data = sheet.get_all_values()
+
+def WriteUpdateTourneyDataSheet(docName, sheetName, SJSLdoc, SJSLsheet):
     """
     Will update the google sheet specified with initial smash.gg data read in. Sheet passed in must be formatted with proper headers
     to match the dataframe and contain URLs in the first column of the format:
@@ -145,12 +150,28 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
     """
 
     # Open the worksheet and get all the data as a list of lists
+    sheet = client.open(SJSLdoc).worksheet(SJSLsheet)
+    sjslTourneyData = sheet.get_all_values()
+
+    # Convert the data to a pandas DataFrame
+    SJSLurlsList  = [row[0] for row in sjslTourneyData]
+
+
+
+    # Open the worksheet and get all the data as a list of lists
     sheet = client.open(docName).worksheet(sheetName)
     data = sheet.get_all_values()
 
     # Convert the data to a pandas DataFrame
     df = pd.DataFrame(data[1:], columns=data[0])
-
+    
+    
+    # Add elements from the SJSL URLS LIST to the DataFrame
+    for i, item in enumerate(SJSLurlsList):
+        if i < len(df):
+            df.loc[i, "Tourney URL"] = item
+        else:
+            df.loc[i] = [item] + [""] * (len(df.columns) - 1)
 
     for index, row in df.iterrows():
       
@@ -186,6 +207,8 @@ def WriteUpdateTourneyDataSheet(docName, sheetName):
         unixTime = tournament['startTimestamp']
         date = datetime.datetime.fromtimestamp(unixTime)
         tournDate = date.strftime("%Y-%m-%d") # print date in mm-dd-yyyy
+
+        df.loc[index, 'Tourney URL'] = tournURL
 
         # add a value to the "new_column" column of the row with index 0
         df.loc[index, 'Tourney SmashGG ID'] = smashGGTourneyName
